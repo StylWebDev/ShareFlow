@@ -1,20 +1,22 @@
 import {createRouter, createWebHistory} from 'vue-router'
 import Timeline from "../views/Timeline.vue";
+import Profile from "../views/Profile.vue";
 
-interface route {
-    path: string;
-    name?: string;
-    component: any;
-    children?: any;
-    beforeEnter?: (to: any,from: any) => {};
-}
-
-const routes: route[] = [
+const routes = [
     {
         path: `/`,
         name: 'Timeline',
         component: Timeline,
     },
+    {
+        path: `/timeline`,
+        redirect: `/`
+    },
+    {
+        path: `/profile/:name`,
+        name: `Profile`,
+        component: Profile
+    }
 ]
 
 const router = createRouter({
