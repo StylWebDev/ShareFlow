@@ -5,7 +5,7 @@ const route = useRoute();
 </script>
 
 <template>
-{{route.params.name}}
+Profile Of {{route.params.name}}
 </template>
 
 <style scoped>

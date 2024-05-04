@@ -1,8 +1,9 @@
 <script setup lang="ts">
+
 </script>
 
 <template>
-<p>Timeline Page</p>
+Error Page
 </template>
 
 <style scoped>
