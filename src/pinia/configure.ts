@@ -7,6 +7,8 @@ interface themeVars {
     logoColor: string,
     headerColor: string,
     textColor: string,
+    signBgColor: string,
+    textShadow: string
 }
 
 const useConfigureStore = defineStore("configure", () => {
@@ -19,12 +21,16 @@ const useConfigureStore = defineStore("configure", () => {
             logoColor: `text-darkviolet-50 brightness-125`,
             headerColor: `bg-darkviolet-700`,
             textColor: `text-neutral-100`,
+            signBgColor: `bg-neutral-900/30`,
+            textShadow: `text-shadow-sm shadow-white`
         },
         {
             bgColor: `#fafafa`,
             logoColor: `text-neutral-900`,
             textColor: `text-neutral-900`,
-            headerColor: `bg-neutral-200`
+            headerColor: `bg-neutral-300`,
+            signBgColor: `bg-neutral-300/35`,
+            textShadow: `text-shadow-sm shadow-neutral-900`
         }
 
     ]);

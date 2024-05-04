@@ -15,7 +15,7 @@ const store = useConfigureStore();
     <Title/>
     <SearchBar/>
     <div :class=" (store.isAuthenticated) ? ` max-xl:hidden xl:block` : `block`">
-      <NotAuth v-if="!store.isAuthenticated"/>
+      <NotAuth v-if="!store.isAuthenticated" class="` max-xl:hidden xl:block` "/>
       <Auth v-else/>
     </div>
     <SearchBarMobile/>

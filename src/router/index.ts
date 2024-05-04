@@ -47,7 +47,7 @@ router.beforeEach((to) => {
     const store = useConfigureStore()
     if (store.isAuthenticated && to.name !== 'Profile' && to.name !== 'Timeline') return { name: 'Timeline' }
     else {
-        if (!store.isAuthenticated && to.name !== 'Login' && to.name !== 'SignUp' ) return { name: `Login` }
+        if (!store.isAuthenticated && to.name !== 'Login' && to.name !== 'SignUp' && to.name !== "Profile" ) return { name: `Login` }
     }
 })
 
