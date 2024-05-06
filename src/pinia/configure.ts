@@ -8,7 +8,10 @@ interface themeVars {
     headerColor: string,
     textColor: string,
     signBgColor: string,
-    textShadow: string
+    textShadow: string,
+    contentBgColor: string,
+    descriptionBgColor: string,
+    profileBgColor: string,
 }
 
 const useConfigureStore = defineStore("configure", () => {
@@ -22,15 +25,21 @@ const useConfigureStore = defineStore("configure", () => {
             headerColor: `bg-darkviolet-700`,
             textColor: `text-neutral-100`,
             signBgColor: `bg-neutral-900/30`,
-            textShadow: `text-shadow-sm shadow-white`
+            textShadow: `text-shadow-sm shadow-white`,
+            contentBgColor: `bg-darkviolet-200`,
+            descriptionBgColor: `bg-neutral-900/65 `,
+            profileBgColor: `bg-neutral-900/60`,
         },
         {
             bgColor: `#fafafa`,
             logoColor: `text-neutral-900`,
             textColor: `text-neutral-900`,
             headerColor: `bg-neutral-300`,
-            signBgColor: `bg-neutral-300/35`,
-            textShadow: `text-shadow-sm shadow-neutral-900`
+            signBgColor: `bg-neutral-400/35`,
+            textShadow: `text-shadow-sm shadow-neutral-900`,
+            contentBgColor: `bg-neutral-300`,
+            descriptionBgColor: `bg-neutral-400/50`,
+            profileBgColor: `bg-neutral-400/40`,
         }
 
     ]);
