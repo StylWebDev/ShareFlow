@@ -10,7 +10,7 @@ const store = useConfigureStore();
 
 <template>
  <div>
-   <DesktopFooter class="max-xl:hidden border-t border-neutral-200/20" :class="themes[store.theme].textColor" />
+   <DesktopFooter class="max-xl:hidden border-t border-neutral-400/60 " :class="themes[store.theme].textColor" />
    <MobileFooter class="xl:hidden"/>
  </div>
 

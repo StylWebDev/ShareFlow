@@ -20,7 +20,9 @@ defineProps<{
 </script>
 
 <template>
-<Flex :column="true" justify="center" items="center" class="w-[450px] rounded-md" :class="themes[store.theme].contentBgColor">
+<Flex :column="true" justify="center" items="center"
+      class="max-[250px]:w-[200px] max-[300px]:w-[250px] max-sm:w-[300px] sm:w-[350px] md:w-[450px] rounded-md"
+      :class="themes[store.theme].contentBgColor">
   <div :class="themes[store.theme].profileBgColor" class=" w-full py-2 px-3 rounded-t-md ">
     <p class="font-semibold text-lg">
       <img :src="profileIcon" alt="pfp" class="inline size-10 rounded-full" />
@@ -28,7 +30,7 @@ defineProps<{
     </p>
   </div>
   <div class="text-center relative w-[100%] rounded-md">
-    <img @dblclick="[liked=!liked, (liked) ? likes++ : likes--]" :src="imageSrc" alt="img" class="inline">
+    <img @dblclick="[(!liked) ? liked=!liked : null, (liked) ? likes++ : likes--]" :src="imageSrc" alt="img" class="inline">
   </div>
 
   <div :class="themes[store.theme].descriptionBgColor" class=" py-2 px-3 w-full rounded-b-md">

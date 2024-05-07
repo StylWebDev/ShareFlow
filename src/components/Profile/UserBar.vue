@@ -2,6 +2,8 @@
 
 import Flex from "../Flex.vue";
 
+
+
 defineProps<{
   profileName: string,
   profileInfo: {
@@ -14,14 +16,16 @@ defineProps<{
 </script>
 
 <template>
-    <Flex :row="true" gap-x="5">
-      <div><img :src="profileInfo.icon" alt="pfp" class="size-24 rounded-full"></div>
-      <Flex :column="true" gap-y="2" class="pt-3">
-        <h1 class="text-2xl font-extrabold">{{profileName}}</h1>
-        <Flex :row="true" gap-x="5" class="font-semibold">
-          <p>{{profileInfo.posts}} posts</p>
-          <p>{{profileInfo.followers}} followers</p>
-          <p>{{profileInfo.following}} following</p>
+    <Flex justify="center" items="center" gap-y="5" gap-x="5" class="max-sm:flex-col sm:flex-row">
+      <Flex class="items-center gap-x-2" ><img :src="profileInfo.icon" alt="pfp" class="max-sm:size-16 size-24 rounded-full">
+        <h1 class="text-lg sm:hidden font-extrabold text-yellow-500">{{profileName}}</h1>
+      </Flex>
+      <Flex :column="true" gap-y="2" class="sm:pt-3">
+        <h1 class="max-sm:text-lg text-2xl max-sm:hidden font-extrabold text-yellow-500">{{profileName}}</h1>
+        <Flex :row="true" gap-x="5" items="center" justify="center" class="font-semibold max-sm:text-xs">
+          <p class="text-center capitalize">{{profileInfo.posts}}<br> posts</p>
+          <p class="text-center capitalize">{{profileInfo.followers}}<br> followers</p>
+          <p class="text-center capitalize">{{profileInfo.following}}<br> following</p>
         </Flex>
       </Flex>
     </Flex>

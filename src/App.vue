@@ -3,9 +3,11 @@ import Header from "./components/Header.vue";
 import useConfigureStore from "./pinia/configure.ts";
 import {onMounted, ref} from "vue";
 import Footer from "./components/Footer.vue";
+import Flex from "./components/Flex.vue";
 const {themes} = useConfigureStore();
 const store = useConfigureStore();
 const darkMode = ref(window.matchMedia("(prefers-color-scheme: dark)"));
+
 
 onMounted(()=> {
   (darkMode.value.matches) ? store.theme=0 : store.theme=1;
@@ -14,13 +16,16 @@ onMounted(()=> {
 </script>
 
 <template>
- <Header :class="themes[store.theme].headerColor" class="sticky top-0"/>
-  <Transition enter-from-class="scale-0 opacity-0 " enter-active-class="transition-all duration-500 ease-in"
-              leave-to-class="scale-0 opacity-0 absolute" leave-active-class="transition-all duration-500 ease-in"
-              appear appear-active-class="transition-all opacity-0 duration-500 ease-in">
-    <RouterView :class="themes[store.theme].textColor" />
-  </Transition>
- <Footer class="mt-5"/>
+  <Flex :column="true" class="h-screen">
+    <Header :class="themes[store.theme].headerColor" class="sticky top-0 z-50"/>
+    <Transition enter-from-class="scale-0 opacity-0 " enter-active-class="transition-all duration-500 ease-in"
+                leave-to-class="scale-0 opacity-0 absolute" leave-active-class="transition-all duration-500 ease-in"
+                appear appear-active-class="transition-all opacity-0 duration-500 ease-in">
+      <RouterView class="flex-grow" :class="themes[store.theme].textColor" />
+    </Transition>
+    <Footer :class="[themes[store.theme].headerColor,themes[store.theme].textColor, (store.isAuthenticated) ?  `sticky bottom-0 w-full` : `max-sm:sticky sm:fixed bottom-0 w-full`]" class="mt-5 z-50 "  />
+  </Flex>
+
 </template>
 
 <style scoped>

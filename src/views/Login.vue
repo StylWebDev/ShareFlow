@@ -15,7 +15,7 @@ const show = ref<boolean>(false);
 </script>
 
 <template>
-  <Flex :column="true" justify="center" items="center" class="mt-6 sm:gap-y-6">
+  <Flex :column="true" items="center" class="mt-6 sm:gap-y-6">
 
     <Flex :column="true" justify="center" items="center" gap-y="5"
           :class="themes[store.theme].signBgColor"
