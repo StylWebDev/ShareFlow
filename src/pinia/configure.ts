@@ -1,4 +1,4 @@
-import {ref, watch} from 'vue'
+import {ref} from 'vue'
 import {defineStore} from 'pinia'
 import {useRouter} from "vue-router";
 
@@ -45,22 +45,16 @@ const useConfigureStore = defineStore("configure", () => {
     ]);
 
     const theme = ref<number>(0);
-    const isAuthenticated = ref<boolean>(true);
     const search = ref("");
 
     const goToProfile = (): void => {
         if (search.value !== "") router.push(`/profile/${search.value}`);
     }
 
-    watch(isAuthenticated, (newVal:boolean ) => {
-        if (!newVal) router.push(`/login`);
-    })
-
     return {
         transition,
         themes,
         theme,
-        isAuthenticated,
         search,
         goToProfile,
     }

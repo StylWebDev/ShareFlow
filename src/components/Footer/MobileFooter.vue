@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import useConfigureStore from "../../pinia/configure.ts";
 import {computed, ref} from "vue";
 import Flex from "../Flex.vue";
 import {Icon} from "@iconify/vue";
+import {useAuthenticationStore} from "../../pinia/authentication.ts";
 
-const store = useConfigureStore();
+const store = useAuthenticationStore();
 const links = ref([
   {icon: `mingcute:home-4-fill`, to: '/'},
   {icon: `material-symbols-light:add-photo-alternate-rounded`, to: ''},

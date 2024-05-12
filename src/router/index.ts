@@ -4,7 +4,7 @@ import Profile from "../views/Profile.vue";
 import Login from "../views/Login.vue";
 import SignUp from "../views/SignUp.vue";
 import Error from "../views/Error.vue";
-import useConfigureStore from "../pinia/configure.ts";
+import {useAuthenticationStore} from "../pinia/authentication.ts";
 
 const routes = [
     {
@@ -43,9 +43,9 @@ const router = createRouter({
     routes
 })
 
-router.beforeEach((to) => {
-    const store = useConfigureStore()
-    if (store.isAuthenticated && to.name !== 'Profile' && to.name !== 'Timeline') return { name: 'Timeline' }
+router.beforeEach((to, from) => {
+    const store = useAuthenticationStore()
+    if (store.isAuthenticated && to.name !== 'Profile' && to.name !== 'Timeline' && from.name !== 'Profile') return { name: 'Timeline' }
     else {
         if (!store.isAuthenticated && to.name !== 'Login' && to.name !== 'SignUp' && to.name !== "Profile" ) return { name: `Login` }
     }

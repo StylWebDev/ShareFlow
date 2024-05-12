@@ -2,9 +2,10 @@
 
 import Flex from "../Flex.vue";
 import useConfigureStore from "../../pinia/configure.ts";
+import {useAuthenticationStore} from "../../pinia/authentication.ts";
 
 const {transition} = useConfigureStore();
-const store = useConfigureStore();
+const auth = useAuthenticationStore();
 
 </script>
 
@@ -15,7 +16,7 @@ const store = useConfigureStore();
             type="button">Profile</RouterLink>
     <button class="px-2 font-semibold rounded-lg text-red-500 border-2 border-red-500 hover:text-white hover:border-red-500 hover:bg-red-500 duration-500"
             :class="transition"
-            @click="store.isAuthenticated = !store.isAuthenticated"
+            @click="auth.handleLogout()"
             type="button">Sign Out</button>
   </Flex>
 </template>

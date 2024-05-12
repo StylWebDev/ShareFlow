@@ -1,17 +1,30 @@
 <script setup lang="ts">
-
 import Flex from "../components/Flex.vue";
 import Title from "../components/Header/Title.vue";
-import {ref} from "vue";
+import {onUnmounted, reactive, ref} from "vue";
 import useConfigureStore from "../pinia/configure.ts";
 import {Icon} from "@iconify/vue";
+import {useAuthenticationStore} from "../pinia/authentication.ts";
+import {SignIn} from "../types.ts";
 
 const {transition,themes} = useConfigureStore()
 const store = useConfigureStore()
+const auth = useAuthenticationStore()
 
-const username = ref<string>("");
-const password = ref<string>("");
+const credentials = reactive<SignIn>({
+  email: "",
+  password: ""
+})
 const show = ref<boolean>(false);
+
+const handleOk = () => {
+  auth.handleSignIn(credentials);
+}
+
+onUnmounted(() => {
+  auth.err = "";
+})
+
 </script>
 
 <template>
@@ -24,25 +37,37 @@ const show = ref<boolean>(false);
       <h1 class="align-middle text-2xl"><Title class="cursor-default pointer-events-none"/></h1>
       <p :class="themes[store.theme].textShadow" class="font-semibold text-center px-6 ">Sign in to see the latest news from your friends.</p>
 
-      <input v-model.trim="username"
+      <input v-model.trim="credentials.email"
              :class="transition"
               class="pl-3 max-[340px]:w-52 bg-neutral-200 text-black text-sm rounded-md border border-neutral-800/50 h-9 w-72 outline-0 hover:scale-105 duration-300"
-              placeholder="Username or Email" type="text"/>
+              placeholder="Email" type="text"/>
 
       <div
           :class="transition"
           class="bg-neutral-200 border border-neutral-800/50 rounded-md  max-[300px]:col-span-1 text-black hover:scale-105 duration-300">
         <input
-            v-model="password"
-            :class="(password === ``) ? `w-72` : `w-60`"
+            v-model="credentials.password"
+            :class="(credentials.password === ``) ? `w-72` : `w-60`"
             class="pl-3 text-sm max-[340px]:w-52 bg-neutral-200 h-9 outline-0 rounded-md"
             placeholder="Password" :type="(show) ?  `text` : `password`"/>
 
-        <button class="px-3 " type="button" @click="show = !show" :class="(password === ``) ? `hidden` : `inline`" >
+        <button class="px-3 " type="button" @click="show = !show" :class="(credentials.password === ``) ? `hidden` : `inline`" >
           <Icon :icon="(show) ? `mdi:eye-off` : `mdi:eye`" class="size-6  inline"/>
         </button>
       </div>
-      <button type="button" :class="transition" class="px-3 py-0.5  bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 hover:scale-105 duration-300">Log in</button>
+
+      <p v-if="auth.loading" class="align-middle text-center px-3">
+        <Icon class="inline size-7" icon="svg-spinners:90-ring-with-bg"/> Loading...
+      </p>
+      <p v-else class="text-sm text-red-600 text-center px-3" v-if="auth.err">{{auth.err}}</p>
+
+      <button type="button" :class="transition"
+              :disabled="auth.loading"
+              @click="handleOk()"
+              class="px-3 py-0.5 block  bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 hover:scale-105 duration-300 disabled:bg-neutral-600"
+      >
+        Sign in
+      </button>
 
       <p class="text-sm text-center px-3">You can also report content you believe is unlawful in your country without logging in.</p>
     </Flex>
