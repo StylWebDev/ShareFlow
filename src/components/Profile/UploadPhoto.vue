@@ -1,0 +1,122 @@
+<script setup lang="ts">
+import useConfigureStore from "../../pinia/configure.ts";
+import {Icon} from "@iconify/vue";
+import supabase from "../../supabase.ts";
+import {Dialog, DialogPanel, DialogTitle, TransitionRoot, TransitionChild} from "@headlessui/vue";
+import {ref} from "vue";
+
+const {themes,transition} = useConfigureStore();
+const store = useConfigureStore();
+const isOpen = ref(false);
+const caption = ref<string>("");
+const file = ref<any>(null);
+const loading = ref(false);
+
+function closeModal() {
+  isOpen.value = false
+}
+function openModal() {
+  isOpen.value = true
+}
+
+const handleUpload = async () => {
+    loading.value = true;
+    if (file.value) {
+      await supabase.storage.from('images').upload(`public/` + (Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)).toString(),file.value)
+      isOpen.value = false
+      loading.value = true;
+    }else loading.value = true;
+}
+
+const handleEvent = (e:any):void => {
+  if (e.target.files[0]) {
+    file.value = e.target.files[0];
+  }
+}
+</script>
+
+<template>
+  <button class="px-3  my-7 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-semibold duration-300 align-middle"
+          :class="transition"
+          @click="openModal"
+          type="button">Add Photo <Icon class="inline size-4" icon="material-symbols:add-circle"/> </button>
+
+  <TransitionRoot appear :show="isOpen" as="template">
+    <Dialog as="div" @close="closeModal" class="relative z-10">
+      <TransitionChild
+          as="template"
+          enter="duration-300 ease-out"
+          enter-from="opacity-0"
+          enter-to="opacity-100"
+          leave="duration-200 ease-in"
+          leave-from="opacity-100"
+          leave-to="opacity-0"
+      >
+        <div class="fixed inset-0 bg-black/25" />
+      </TransitionChild>
+
+      <div class="fixed inset-0 overflow-y-auto">
+        <div
+            class="flex min-h-full items-center justify-center p-4 text-center"
+        >
+          <TransitionChild
+              as="template"
+              enter="duration-300 ease-out"
+              enter-from="opacity-0 scale-95"
+              enter-to="opacity-100 scale-100"
+              leave="duration-200 ease-in"
+              leave-from="opacity-100 scale-100"
+              leave-to="opacity-0 scale-95"
+          >
+            <DialogPanel
+                :class="themes[store.theme].contentBgColor, themes[store.theme].textColor"
+                class="w-full max-w-md transform overflow-hidden rounded-2xl p-6 text-left align-middle shadow-xl transition-all"
+            >
+              <DialogTitle
+                  as="h3"
+                  class="text-center text-lg font-medium leading-6 border-b border-white/30 "
+              >
+                Upload Photo
+              </DialogTitle>
+              <div class="flex flex-col mt-3 justify-between gap-y-2">
+                <input type="file" accept=".png,.jpeg,.jpg" class="block rounded" @change="handleEvent" />
+                <input v-model.trim="caption"
+                       :class="transition"
+                       class="pl-3 block w-full mt-3 bg-neutral-200 text-black text-sm border rounded border-neutral-800/50 h-9  outline-0 duration-300"
+                       placeholder="Caption" type="text" maxlength="50"/>
+              </div>
+
+              <div class="mt-5">
+
+                <p v-if="loading" class="align-middle text-start text-sm pb-2">
+                  <Icon class="inline size-3.5" icon="svg-spinners:90-ring-with-bg"/> Uploading<Icon class="inline size-4 pt-2 pr-2" icon="svg-spinners:3-dots-scale"/>
+                </p>
+
+                <div class="flex gap-x-3">
+                  <button
+                      type="button"
+                      :class="transition"
+                      class="inline-flex justify-center rounded-md border border-transparent bg-emerald-500 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-emerald-400 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      @click="handleUpload"
+                  >Upload</button>
+                  <button
+                      type="button"
+                      :class="transition"
+                      class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-red-500 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      @click="closeModal"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </DialogPanel>
+          </TransitionChild>
+        </div>
+      </div>
+    </Dialog>
+  </TransitionRoot>
+</template>
+
+<style scoped>
+
+</style>

@@ -9,8 +9,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@headlessui/vue": "^1.7.22",
     "@supabase/supabase-js": "^2.43.1",
     "pinia": "^2.1.7",
+    "uuid": "^9.0.1",
     "vue": "^3.4.21",
     "vue-router": "^4.3.2"
   },
