@@ -1,6 +1,6 @@
 import {ref} from 'vue'
 import {defineStore} from 'pinia'
-import {useRouter} from "vue-router";
+
 
 interface themeVars {
     bgColor: string,
@@ -16,7 +16,6 @@ interface themeVars {
 
 const useConfigureStore = defineStore("configure", () => {
     const transition = ref<string>("transition-all ease-in");
-    const router = useRouter();
 
     const themes = ref<themeVars[]>([
         {
@@ -48,7 +47,7 @@ const useConfigureStore = defineStore("configure", () => {
     const search = ref("");
 
     const goToProfile = (): void => {
-        if (search.value !== "") router.push(`/profile/${search.value}`);
+        if (search.value !== "") location.assign(`/profile/${search.value}`);
     }
 
     return {

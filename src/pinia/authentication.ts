@@ -2,19 +2,21 @@ import {defineStore} from "pinia";
 import {ref, watch} from "vue";
 import supabase from "../supabase.ts";
 import {useRouter} from "vue-router";
+import {usePostsStore} from "./posts.ts";
 
 
 export const useAuthenticationStore = defineStore('authentication', () => {
     const router = useRouter();
     const isAuthenticated = ref<boolean>(false);
     const user = ref<any>(null);
+    const externalUser = ref<any>(null);
     const err = ref<string>("")
     const loading = ref<boolean>(false);
     const starting = ref<boolean>(false);
+    const posts = usePostsStore();
 
     watch(isAuthenticated, (newVal:boolean ) => {
         if (!newVal) router.push(`/login`);
-        else router.push(`/`);
     })
 
     watch(err, (newVal) => {
@@ -78,16 +80,18 @@ export const useAuthenticationStore = defineStore('authentication', () => {
             if (userInfo.user) {
                 const {data} = await supabase
                     .from("users")
-                    .select(`email, username`)
+                    .select("id, email, username")
                     .eq('email', userInfo.user.email)
                     .single();
 
                 user.value = {
+                    id: data?.id,
                     username: data?.username,
                     email: data?.email
                 }
                 loading.value = false;
                 isAuthenticated.value = !isAuthenticated.value
+                router.push("/");
             }
         }
     }
@@ -132,11 +136,13 @@ export const useAuthenticationStore = defineStore('authentication', () => {
                 .single();
 
             user.value = {
+                id: data?.id,
                 username: data?.username,
                 email: data?.email
             }
             loading.value = false;
             isAuthenticated.value = !isAuthenticated.value
+            router.push("/");
         }
     }
 
@@ -146,7 +152,6 @@ export const useAuthenticationStore = defineStore('authentication', () => {
         isAuthenticated.value = false;
         user.value = null;
     }
-
 
     const getUser = async () => {
         starting.value = true;
@@ -164,6 +169,7 @@ export const useAuthenticationStore = defineStore('authentication', () => {
                 .single();
 
             user.value = {
+                id: data?.id,
                 username: data?.username,
                 email: data?.email
             }
@@ -172,6 +178,28 @@ export const useAuthenticationStore = defineStore('authentication', () => {
         }
 
     }
-    return {isAuthenticated,starting,loading,user,err,handleSignIn,handleSignUp,handleLogout,getUser};
+
+    const getExternalUser = async (username:string) => {
+        err.value = ""
+        const {data, error} = await supabase
+            .from("users")
+            .select("id, email, username")
+            .eq('username', username)
+            .single();
+        if (!error)
+        {
+            externalUser.value = {
+                id: data?.id,
+                username: data?.username,
+                email: data?.email
+            };
+            (isAuthenticated.value && user.value.username === username)
+                ? posts.loadPosts(user.value.id)
+                : posts.loadPosts(externalUser.value.id);
+        }
+
+    }
+
+    return {isAuthenticated,starting,loading,user,externalUser,err,handleSignIn,handleSignUp,handleLogout,getUser,getExternalUser};
 
 })

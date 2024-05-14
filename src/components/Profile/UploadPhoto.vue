@@ -4,28 +4,41 @@ import {Icon} from "@iconify/vue";
 import supabase from "../../supabase.ts";
 import {Dialog, DialogPanel, DialogTitle, TransitionRoot, TransitionChild} from "@headlessui/vue";
 import {ref} from "vue";
+import {useAuthenticationStore} from "../../pinia/authentication.ts";
+import {useRouter} from "vue-router";
+import {usePostsStore} from "../../pinia/posts.ts";
 
 const {themes,transition} = useConfigureStore();
+const posts = usePostsStore()
+const router = useRouter()
 const store = useConfigureStore();
+const auth = useAuthenticationStore();
 const isOpen = ref(false);
 const caption = ref<string>("");
 const file = ref<any>(null);
 const loading = ref(false);
 
-function closeModal() {
+const closeModal = () => {
   isOpen.value = false
 }
-function openModal() {
+const openModal = () => {
   isOpen.value = true
 }
 
 const handleUpload = async () => {
     loading.value = true;
     if (file.value) {
-      await supabase.storage.from('images').upload(`public/` + (Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)).toString(),file.value)
+      const {data} = await supabase.storage.from('images').upload(`public/` + (Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)).toString(),file.value);
+      if (data) {
+          await supabase.from('posts').insert({url: data.path, caption: caption.value ,userid: auth.user.id});
+          await posts.loadPosts(auth.user.id);
+      }else{
+        router.push(`/404`)
+      }
+
       isOpen.value = false
-      loading.value = true;
-    }else loading.value = true;
+      loading.value = false;
+    }else loading.value = false;
 }
 
 const handleEvent = (e:any):void => {
@@ -33,13 +46,14 @@ const handleEvent = (e:any):void => {
     file.value = e.target.files[0];
   }
 }
+
 </script>
 
 <template>
-  <button class="px-3  my-7 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-semibold duration-300 align-middle"
+  <button class="p-0.5  bg-blue-500 hover:bg-emerald-500 text-white rounded-full font-semibold duration-300 align-middle w-40 max-xl:hidden"
           :class="transition"
           @click="openModal"
-          type="button">Add Photo <Icon class="inline size-4" icon="material-symbols:add-circle"/> </button>
+          type="button"><Icon class="inline size-8" icon="material-symbols:add-circle"/> New Post</button>
 
   <TransitionRoot appear :show="isOpen" as="template">
     <Dialog as="div" @close="closeModal" class="relative z-10">

@@ -11,7 +11,7 @@ const store = useAuthenticationStore();
 </script>
 
 <template>
-  <Grid columns="2"  xl-columns="3" class="max-[300px]:grid-cols-1 justify-items-center justify-evenly py-4 border-b border-neutral-400/60 shadow-lg max-xl:gap-y-3 items-center">
+  <Grid columns="1"  xl-columns="3" class="max-[300px]:grid-cols-1 justify-items-center justify-evenly py-4 border-b border-neutral-400/60 shadow-lg max-xl:gap-y-3 items-center">
     <Title/>
     <SearchBar/>
     <Transition enter-from-class="opacity-0" enter-active-class="transition-all duration-50 ease-in">

@@ -10,4 +10,11 @@ interface SignIn {
     password: string
 }
 
-export {type SignUp, type SignIn};
+interface Posts {
+    id: number,
+    caption: string
+    date: string,
+    url: string,
+}
+
+export {type SignUp, type SignIn, type Posts};

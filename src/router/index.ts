@@ -33,7 +33,7 @@ const routes = [
     },
     {
         path: `/:catchAll(.*)*`,
-        name: `404`,
+        name: `Error`,
         component: Error
     }
 ]
@@ -43,11 +43,11 @@ const router = createRouter({
     routes
 })
 
-router.beforeEach((to, from) => {
-    const store = useAuthenticationStore()
-    if (store.isAuthenticated && to.name !== 'Profile' && to.name !== 'Timeline' && from.name !== 'Profile') return { name: 'Timeline' }
+router.beforeEach((to) => {
+    const auth = useAuthenticationStore()
+    if (auth.isAuthenticated && to.name !== 'Profile' && to.name !== 'Timeline' && to.name !== "Error") return { name: 'Timeline' }
     else {
-        if (!store.isAuthenticated && to.name !== 'Login' && to.name !== 'SignUp' && to.name !== "Profile" ) return { name: `Login` }
+        if (!auth.isAuthenticated && to.name !== 'Login' && to.name !== 'SignUp' && to.name !== "Profile" && to.name !== "Error" ) return { name: `Login` }
     }
 })
 
