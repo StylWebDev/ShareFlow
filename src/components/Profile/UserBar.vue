@@ -4,19 +4,34 @@ import Flex from "../Flex.vue";
 import UploadPhoto from "./UploadPhoto.vue";
 import {useAuthenticationStore} from "../../pinia/authentication.ts";
 import useConfigureStore from "../../pinia/configure.ts";
+import {useFollowStore} from "../../pinia/follow.ts";
+import {onMounted} from "vue";
+import {useRoute} from "vue-router";
 
 const {transition} = useConfigureStore()
 const auth = useAuthenticationStore();
+const follow = useFollowStore()
+const route = useRoute()
 
 defineProps<{
   profileName: string,
   profileInfo: {
     icon: string,
     posts: number,
-    followers: number,
-    following: number
+    followers: number|null,
+    following: number|null
   }
 }>()
+
+onMounted(()=> {
+ if (auth.isAuthenticated && auth.user.username !== route.params.name){
+   follow.checkIfFollowing(auth.user.id, auth.externalUser.id)
+ }
+  (auth.isAuthenticated && auth.user.username === route.params.name)
+      ? follow.getFollowers(auth.user.id)
+      : follow.getFollowers(auth.externalUser.id)
+})
+
 </script>
 
 <template>
@@ -33,13 +48,22 @@ defineProps<{
           <p class="text-center capitalize">{{profileInfo.followers}}<br> followers</p>
           <p class="text-center capitalize">{{profileInfo.following}}<br> following</p>
         </Flex>
-        <Flex v-if="auth.user.username !== $route.params.name" :row="true" gap-x="3" justify="evenly"  class="items-center">
-          <button type="button" class="px-3 py-0.5  bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 duration-300 max-sm:text-sm">Follow</button>
-          <button type="button" class="px-3 py-0.5  bg-red-700 text-white rounded-lg font-semibold hover:bg-red-500 duration-300 max-sm:text-sm" >Unfollow</button>
+        <Flex v-if="auth.isAuthenticated && auth.user.username !== $route.params.name" :row="true" gap-x="3" justify="evenly"  class="items-center">
+
+          <button type="button" class="px-3 py-0.5  duration-300 max-sm:text-sm capitalize"
+                  :class="(!follow.isFollowing) ? `bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 ` : `bg-white text-black rounded-lg font-semibold`"
+                  :disabled="follow.isFollowing"
+                  @click="follow.handleFollow(auth.user.id, auth.externalUser.id)">{{ (!follow.isFollowing) ? `Follow ${profileName}` : `Following` }}</button>
+
+          <Transition enter-from-class="scale-0" leave-to-class="scale-0" active-enter-class="transition-all duration-500 ease-in" active-leave-class="transition-all duration-500 ease-out">
+            <button v-if="follow.isFollowing" type="button"  class="px-3 py-0.5  bg-red-700 text-white rounded-lg font-semibold hover:bg-red-500 duration-300 max-sm:text-sm"
+                    @click="follow.handleUnfollow(auth.user.id, auth.externalUser.id)">Unfollow</button>
+          </Transition>
+
         </Flex>
         <Flex/>
-        <UploadPhoto v-if="auth.user.username === $route.params.name" />
-        <button v-if="auth.user.username === $route.params.name"
+        <UploadPhoto v-if="auth.isAuthenticated && auth.user.username === $route.params.name" />
+        <button v-if="auth.isAuthenticated && auth.user.username === $route.params.name"
                 class="px-2 font-semibold rounded-lg text-red-500 border-2 border-red-500 hover:text-white hover:border-red-500 hover:bg-red-500 duration-500 xl:hidden"
                 :class="transition"
                 @click="auth.handleLogout()"

@@ -3,7 +3,7 @@ import {ref} from "vue";
 import supabase from "../supabase.ts";
 import {Posts} from "../types.ts";
 
-export const usePostsStore = defineStore("pinia/posts", () => {
+export const usePostsStore = defineStore("posts", () => {
     const posts = ref< (Posts|never)[]>([]);
     const noPostsMsg = ref<string>("")
 

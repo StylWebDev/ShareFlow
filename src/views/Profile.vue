@@ -9,17 +9,21 @@ import {useAuthenticationStore} from "../pinia/authentication.ts";
 import {usePostsStore} from "../pinia/posts.ts";
 import {onMounted, onUpdated} from "vue";
 import {Icon} from "@iconify/vue";
+import {useFollowStore} from "../pinia/follow.ts";
 
 const auth = useAuthenticationStore()
 const {themes,transition} = useConfigureStore()
 const store = useConfigureStore()
 const posts = usePostsStore()
+const follow = useFollowStore()
+
 onMounted(()=> {
   auth.getExternalUser(route.params.name.toString());
 })
 onUpdated(()=> {
   auth.getExternalUser(route.params.name.toString());
 })
+
 </script>
 
 <template>
@@ -27,18 +31,28 @@ onUpdated(()=> {
 
     <Flex v-if="auth.isAuthenticated && auth.user.username === route.params.name" :column="true"
           class="gap-y-5   max-sm:w-[90%] sm:w-[80%] lg:w-[80%] xl:w-[80%] 2xl:w-[70%] ">
-       <UserBar class="px-16 py-3 rounded-md capitalize" :class="[themes[store.theme].signBgColor ,themes[store.theme].textColor]" :profileName="auth.user.username" :posts="posts"  :profileInfo="{icon: `https://cdn.hero.page/pfp/03dffda4-6d0d-4f4a-93c7-16e87406605f-shadowy-anime-character-unique-black-pfp-anime-1.png` ,posts: 4, followers: 100, following: 300}"/>
+       <UserBar class="px-16 py-3 rounded-md capitalize" :class="[themes[store.theme].signBgColor ,themes[store.theme].textColor]"
+                :profileName="auth.user.username"
+                :posts="posts"
+                :profileInfo="{icon: `https://cdn.hero.page/pfp/03dffda4-6d0d-4f4a-93c7-16e87406605f-shadowy-anime-character-unique-black-pfp-anime-1.png` ,posts: posts.posts.length, followers: follow.followers, following: follow.following}"/>
        <ImageGallery class="px-16 py-3 rounded-md" :class="themes[store.theme].signBgColor" :profileName="route.params.name.toString()" :posts="posts.posts"/>
     </Flex>
+
     <Flex v-else-if="auth.externalUser!=null" :column="true"
           class="gap-y-5   max-sm:w-[90%] sm:w-[80%] lg:w-[80%] xl:w-[80%] 2xl:w-[70%] ">
-      <UserBar class="px-16 py-3 rounded-md capitalize" :class="[themes[store.theme].signBgColor ,themes[store.theme].textColor]" :profileName="auth.externalUser.username"  :profileInfo="{icon: `https://cdn.hero.page/pfp/03dffda4-6d0d-4f4a-93c7-16e87406605f-shadowy-anime-character-unique-black-pfp-anime-1.png` ,posts: 4, followers: 100, following: 300}"/>
+      <UserBar class="px-16 py-3 rounded-md capitalize" :class="[themes[store.theme].signBgColor ,themes[store.theme].textColor]"
+               :profileName="auth.externalUser.username"
+               :profileInfo="{icon: `https://cdn.hero.page/pfp/03dffda4-6d0d-4f4a-93c7-16e87406605f-shadowy-anime-character-unique-black-pfp-anime-1.png` ,posts: posts.posts.length, followers: follow.followers, following: follow.following}"/>
       <ImageGallery v-if="posts.posts.length > 0" class="px-16 py-3 rounded-md" :class="themes[store.theme].signBgColor" :profileName="route.params.name.toString()"  :posts="posts.posts"/>
+
+
       <Flex :column="true" justify="center" items="center" v-else class="text-center text-lg font-semibold py-6 rounded-md" :class="[themes[store.theme].signBgColor,themes[store.theme].textColor]">
         <Icon icon="material-symbols:no-photography" class=" size-16"/>
         <p class="capitalize">This user doesn't have any posts</p>
       </Flex>
     </Flex>
+
+
     <Flex v-else :column="true" justify="center" items="center" gap-y="5" :class="themes[store.theme].textColor">
       <Icon icon="material-symbols:account-circle-off" class=" size-28"/>
       <p class="text-2xl font-bold">Sorry But This User Does Not Exists!</p>
