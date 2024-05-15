@@ -6,6 +6,7 @@ import useConfigureStore from "../pinia/configure.ts";
 import {Icon} from "@iconify/vue";
 import {useAuthenticationStore} from "../pinia/authentication.ts";
 import {SignIn} from "../types.ts";
+import {useRouter} from "vue-router";
 
 const {transition,themes} = useConfigureStore()
 const store = useConfigureStore()

@@ -8,7 +8,7 @@ export const useFollowStore = defineStore("follow", () => {
     const followers = ref<number|null>(0);
     const following = ref<number|null>(0);
 
-    const getFollowers = async(userId:number) => {
+    const getNumberFollowers = async(userId:number) => {
          const {count: followersCount} = await supabase.from("followTable").select(`*`, {count: `exact`}).eq('followingId', userId);
          followers.value = followersCount;
 
@@ -33,7 +33,7 @@ export const useFollowStore = defineStore("follow", () => {
             .insert({followerId: authUserID, followingId:externalUserId })
         await checkIfFollowing(authUserID,externalUserId);
 
-        await getFollowers(externalUserId)
+        await getNumberFollowers(externalUserId)
     }
 
     const handleUnfollow = async (authUserID:number, externalUserId:number) => {
@@ -44,9 +44,9 @@ export const useFollowStore = defineStore("follow", () => {
             .eq('followingId', externalUserId)
 
         await checkIfFollowing(authUserID,externalUserId);
-        await getFollowers(externalUserId);
+        await getNumberFollowers(externalUserId);
     }
 
-    return {isFollowing,followers,following,checkIfFollowing,getFollowers,handleFollow,handleUnfollow}
+    return {isFollowing,followers,following,checkIfFollowing,getNumberFollowers,handleFollow,handleUnfollow}
 
 })

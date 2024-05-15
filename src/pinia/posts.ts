@@ -16,7 +16,7 @@ export const usePostsStore = defineStore("posts", () => {
             .eq(`userid`, userid);
         if (!error) {
             postsArr?.forEach((post) => {
-                posts.value.unshift({id: post.id, caption: post.caption, date: post.created_at, url: `https://uxxdciyvirkmeotleylq.supabase.co/storage/v1/object/public/images/` + post.url.toString()})
+                posts.value.unshift({id: post.id, caption: post.caption, date: post.created_at, url: import.meta.env.VITE_POST_URL + post.url.toString()})
             })
         }else noPostsMsg.value = "This User Does not Posted yet";
     }

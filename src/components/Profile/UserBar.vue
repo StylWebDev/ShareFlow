@@ -28,15 +28,15 @@ onMounted(()=> {
    follow.checkIfFollowing(auth.user.id, auth.externalUser.id)
  }
   (auth.isAuthenticated && auth.user.username === route.params.name)
-      ? follow.getFollowers(auth.user.id)
-      : follow.getFollowers(auth.externalUser.id)
+      ? follow.getNumberFollowers(auth.user.id)
+      : follow.getNumberFollowers(auth.externalUser.id)
 })
 
 </script>
 
 <template>
 
-    <Flex justify="center" items="center" gap-y="3" gap-x="5" class="max-sm:flex-col sm:flex-row">
+    <Flex justify="center" items="center" gap-y="3" gap-x="5" class="max-sm:flex-col sm:flex-row border">
       <Flex :column="true"  class="items-center gap-x-2" >
         <img :src="profileInfo.icon" alt="pfp" class="max-sm:size-16 size-28 rounded-full">
         <h1 class="text-2xl max-[340px]:text-lg sm:hidden font-extrabold text-yellow-500">{{profileName}}</h1>

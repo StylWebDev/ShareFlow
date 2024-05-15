@@ -30,7 +30,7 @@ defineProps<{
     </p>
   </div>
   <div class="text-center relative w-[100%] rounded-md">
-    <img @dblclick="[(!liked) ? liked=!liked : null, (liked) ? likes++ : likes--]" :src="imageSrc" alt="img" class="inline">
+    <img @dblclick="[(!liked) ? liked=!liked : null, (likes===0) ? likes++ : likes--]" :src="imageSrc" alt="img" class="inline cursor-pointer">
   </div>
 
   <div :class="themes[store.theme].descriptionBgColor" class=" py-2 px-3 w-full rounded-b-md">
@@ -41,7 +41,7 @@ defineProps<{
       </p>
     </div>
     <Flex :row="true" gap-x="2" class="pt-1.5">
-      <Icon class="size-8 " :class="[(liked) ? `text-red-500 scale-125 duration-300` : `text-neutral-100 duration-300 hover:scale-110 scale-100`, transition]" icon="material-symbols-light:favorite-rounded" @click="[liked=!liked,(liked) ? likes++ : likes--]"/>
+      <Icon class="size-8 " :class="[(likes===1) ? `text-red-500 scale-125 duration-300` : `text-neutral-100 duration-300 hover:scale-110 scale-100`, transition]" icon="material-symbols-light:favorite-rounded" @click="[liked=!liked,(liked) ? likes++ : likes--]"/>
       <Icon class="size-8 text-neutral-100 hover:scale-110 duration-500" :class="transition" icon="ph:chat-teardrop-duotone"/>
       <Icon class="size-8 text-neutral-100 hover:scale-110 duration-500" :class="transition" icon="carbon:send-alt-filled"/>
     </Flex>

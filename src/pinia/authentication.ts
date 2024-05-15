@@ -65,13 +65,13 @@ export const useAuthenticationStore = defineStore('authentication', () => {
         err.value = ""
         loading.value = true;
         const {email, password} = credentials;
-        console.log(email, password);
 
         (validateEmail(email))
             ? validatePass(password)
             : err.value += "Email is invalid";
 
         if (err.value.length > 0) return ;
+
 
         const {data: userInfo, error} = await supabase.auth.signInWithPassword({email, password});
 
@@ -90,8 +90,8 @@ export const useAuthenticationStore = defineStore('authentication', () => {
                     email: data?.email
                 }
                 loading.value = false;
-                isAuthenticated.value = !isAuthenticated.value
-                router.push("/");
+                isAuthenticated.value = true;
+                if(isAuthenticated) router.push("/");
             }
         }
     }
@@ -122,12 +122,12 @@ export const useAuthenticationStore = defineStore('authentication', () => {
             if (error) {
                 return err.value = error.message;
             }
-
             await supabase.from("users").insert({
                 fullname,
                 email,
                 username
             })
+
 
             const {data} = await supabase
                 .from("users")
@@ -140,12 +140,10 @@ export const useAuthenticationStore = defineStore('authentication', () => {
                 username: data?.username,
                 email: data?.email
             }
-            loading.value = false;
-            isAuthenticated.value = !isAuthenticated.value
-            router.push("/");
+
+            await handleSignIn({email, password});
         }
     }
-
 
     const handleLogout = async () => {
         await supabase.auth.signOut();
