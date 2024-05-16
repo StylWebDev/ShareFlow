@@ -49,11 +49,11 @@ const router = createRouter({
     routes
 })
 
-router.beforeEach((to) => {
+router.afterEach((to) => {
     const auth = useAuthenticationStore()
-    if (auth.isAuthenticated && to.name !== 'Profile' && to.name !== 'Timeline' && to.name !== "Error") return { name: 'Timeline' }
+    if (auth.isAuthenticated && to.name !== 'Profile' && to.name !== 'Timeline' && to.name !== "Error" && to.name!== `Post`) router.push('/')
     else {
-        if (!auth.isAuthenticated && to.name !== 'Login' && to.name !== 'SignUp' && to.name !== "Profile" && to.name !== "Error" ) return { name: `Login` }
+        if (!auth.isAuthenticated && to.name !== 'Login' && to.name !== 'SignUp' && to.name !== "Profile" && to.name!== `Post`) router.push('/login')
     }
 })
 

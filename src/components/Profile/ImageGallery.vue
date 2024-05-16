@@ -35,7 +35,7 @@ const closeModal = () => {
     </h2>
     <Flex :column="true" justify="center" items="center" gap-y="3" class="py-3">
       <Grid columns="1" md-columns="2" sm-columns="2" lg-columns="3" txl-columns="5" class="grid-flow-row gap-y-4 gap-x-16 justify-items-center" :class="(!auth.isAuthenticated) ? `blur pointer-events-none`: null">
-        <div v-for="(post,index) in posts" :key="index+1" class="max-[400px]:w-[200px] max-[640px]:w-[320px] w-[200px] xl:w-[180px] min-[2000px]:w-[240px] min-[2200px]:w-[260px] min-[2600px]:w-[320px] min-[3000px]:w-[370px] min-[3500px]:w-[415px] min-[4000px]:w-[450px]">
+        <div v-for="(post,index) in posts" :key="index+1" class="max-[400px]:w-[200px] max-[640px]:w-[300px] w-[200px] xl:w-[180px] min-[2000px]:w-[240px] min-[2200px]:w-[260px] min-[2600px]:w-[320px] min-[3000px]:w-[370px] min-[3500px]:w-[415px] min-[4000px]:w-[450px]">
           <img @click="[isOpen=true,caption=post.caption,image=post.url]" class="rounded-md cursor-pointer" :src="url + post.url" :alt="`img_${index+1}_of_${profileName}`">
         </div>
       </Grid>
@@ -70,7 +70,7 @@ const closeModal = () => {
             >
               <DialogPanel
                   :class="[themes[store.theme].contentBgColor, themes[store.theme].textColor]"
-                  class="w-full max-w-md transform overflow-hidden rounded-2xl  text-left align-middle shadow-xl transition-all"
+                  class=" max-sm:mt-16 max-w-md transform overflow-hidden rounded-2xl  text-left align-middle shadow-xl transition-all"
               >
                 <Card
                     class="capitalize"

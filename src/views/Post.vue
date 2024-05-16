@@ -1,44 +1,55 @@
 <script setup lang="ts">
 import {useRoute} from "vue-router";
 import Card from "../components/Card.vue";
-import {onMounted, ref} from "vue";
+import {onBeforeMount, ref} from "vue";
 import supabase from "../supabase.ts";
+import Flex from "../components/Flex.vue";
+import {Icon} from "@iconify/vue";
+import useConfigureStore from "../pinia/configure.ts";
 const route = useRoute();
 const postInfo = ref<any>();
 const profileName = ref<any>();
-const error = ref<string>();
+const error = ref<string>("");
+const store = useConfigureStore()
 
-onMounted(async () => {
+onBeforeMount(async () => {
   const {data} = await supabase
       .from("posts")
       .select()
-      .eq("url", route.params.id.toString)
+      .eq("url", `public/`+route.params.id.toString())
       .single()
-  postInfo.value = data
+  postInfo.value = data;
 
   if (data) {
     const {data: userName} = await supabase
         .from("users")
         .select(`id, username`)
-        .in("id", postInfo.value.id);
+        .eq("id", postInfo.value.userid)
+        .single();
     if (userName) profileName.value = userName?.username;
     else error.value = `Post not found.`;
   }else {
     error.value = `Post not found.`;
   }
-
-
 })
-
 </script>
 
 <template>
-<Card profile-icon="https://cdn.hero.page/pfp/03dffda4-6d0d-4f4a-93c7-16e87406605f-shadowy-anime-character-unique-black-pfp-anime-1.png"
-      :profile-name="profileName"
-      :description="postInfo.caption"
-      :image-src="route.params.id.toString"
-      :userid="postInfo.userid"
-/>
+    <Flex :row="true" justify="center" items="center">
+      <Card  v-if="postInfo!=null && !error.length" profile-icon="https://cdn.hero.page/pfp/03dffda4-6d0d-4f4a-93c7-16e87406605f-shadowy-anime-character-unique-black-pfp-anime-1.png"
+            :profile-name="profileName"
+            :description="postInfo.caption"
+            :image-src="postInfo.url"
+            :userid="postInfo.userid"
+      />
+      <div v-else class="px-5">
+        <h2 class="text-center">
+          <Icon icon="material-symbols-light:image-not-supported" class="inline size-16"/>
+        </h2>
+        <p class="capitalize text-center font-semibold">Sorry But We couldn't Find The Post You Were Looking For!</p>
+      </div>
+    </Flex>
+
 </template>
 
 <style scoped>

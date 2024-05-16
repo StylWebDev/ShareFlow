@@ -14,10 +14,9 @@ export const useAuthenticationStore = defineStore('authentication', () => {
     const loading = ref<boolean>(false);
     const starting = ref<boolean>(false);
     const posts = usePostsStore();
+    const isProfile = ref(false);
 
-    watch(isAuthenticated, (newVal:boolean ) => {
-        if (!newVal) router.push(`/login`);
-    })
+
 
     watch(err, (newVal) => {
         if (newVal.length != 0) loading.value = false;
@@ -149,6 +148,7 @@ export const useAuthenticationStore = defineStore('authentication', () => {
         await supabase.auth.signOut();
         isAuthenticated.value = false;
         user.value = null;
+        router.push(`/login`)
     }
 
     const getUser = async () => {
@@ -198,6 +198,6 @@ export const useAuthenticationStore = defineStore('authentication', () => {
 
     }
 
-    return {isAuthenticated,starting,loading,user,externalUser,err,handleSignIn,handleSignUp,handleLogout,getUser,getExternalUser};
+    return {isAuthenticated,isProfile,starting,loading,user,externalUser,err,handleSignIn,handleSignUp,handleLogout,getUser,getExternalUser};
 
 })

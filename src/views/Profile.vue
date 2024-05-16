@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import {useRoute} from "vue-router";
+import {useRoute,useRouter} from "vue-router";
 import UserBar from "../components/Profile/UserBar.vue";
 import Flex from "../components/Flex.vue";
 const route = useRoute();
+const router = useRouter();
 import useConfigureStore from "../pinia/configure.ts";
 import ImageGallery from "../components/Profile/ImageGallery.vue";
 import {useAuthenticationStore} from "../pinia/authentication.ts";
