@@ -17,7 +17,6 @@ const store = useConfigureStore();
 const count = ref(2)
 const followingId = ref<any>(null)
 const continueFetching = ref(true)
-const url = ref(import.meta.env.VITE_POST_URL)
 
 const getFollowers = async ():Promise<void> => {
   if (auth.isAuthenticated) {
@@ -26,9 +25,7 @@ const getFollowers = async ():Promise<void> => {
         .select("followingId")
         .eq(`followerId`, auth.user.value.id);
 
-    if (error) {
-
-    }else {
+    if (!error) {
       followingId.value = followingArray?.map(following => following.followingId);
 
       const {data} = await supabase
@@ -78,8 +75,9 @@ onMounted(() => {
             class="capitalize"
             :profileName="followers.find(follower => follower.id === post.userid).username"
             profileIcon="https://cdn.hero.page/pfp/03dffda4-6d0d-4f4a-93c7-16e87406605f-shadowy-anime-character-unique-black-pfp-anime-1.png"
+            :userid="auth.user.value.id"
             :description="post.caption"
-            :imageSrc="url + post.url"   />
+            :imageSrc="post.url"   />
         <Transition
             enter-from-class="scale-0"
             enter-active-class="transition-all duration-500 ease-in"

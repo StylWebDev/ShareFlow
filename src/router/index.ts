@@ -5,6 +5,7 @@ import Login from "../views/Login.vue";
 import SignUp from "../views/SignUp.vue";
 import Error from "../views/Error.vue";
 import {useAuthenticationStore} from "../pinia/authentication.ts";
+import Post from "../views/Post.vue";
 
 const routes = [
     {
@@ -25,6 +26,11 @@ const routes = [
         path: `/login`,
         name: `Login`,
         component: Login,
+    },
+    {
+        path: `/post/public/:id`,
+        name: `Post`,
+        component: Post
     },
     {
         path: `/signup`,

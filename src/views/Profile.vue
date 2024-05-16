@@ -35,7 +35,7 @@ onUpdated(()=> {
                 :profileName="auth.user.username"
                 :posts="posts"
                 :profileInfo="{icon: `https://cdn.hero.page/pfp/03dffda4-6d0d-4f4a-93c7-16e87406605f-shadowy-anime-character-unique-black-pfp-anime-1.png` ,posts: posts.posts.length, followers: follow.followers, following: follow.following}"/>
-       <ImageGallery class="px-16 py-3 rounded-md" :class="themes[store.theme].signBgColor" :profileName="route.params.name.toString()" :posts="posts.posts"/>
+       <ImageGallery class="px-16 py-3 rounded-md border" :class="themes[store.theme].signBgColor" :profileName="route.params.name.toString()" :posts="posts.posts"/>
     </Flex>
 
     <Flex v-else-if="auth.externalUser!=null" :column="true"
@@ -43,7 +43,7 @@ onUpdated(()=> {
       <UserBar class="px-16 py-3 rounded-md capitalize" :class="[themes[store.theme].signBgColor ,themes[store.theme].textColor]"
                :profileName="auth.externalUser.username"
                :profileInfo="{icon: `https://cdn.hero.page/pfp/03dffda4-6d0d-4f4a-93c7-16e87406605f-shadowy-anime-character-unique-black-pfp-anime-1.png` ,posts: posts.posts.length, followers: follow.followers, following: follow.following}"/>
-      <ImageGallery v-if="posts.posts.length > 0" class="px-16 py-3 rounded-md" :class="themes[store.theme].signBgColor" :profileName="route.params.name.toString()"  :posts="posts.posts"/>
+      <ImageGallery v-if="posts.posts.length > 0" class="px-16 py-3 rounded-md border" :class="[themes[store.theme].signBgColor ,themes[store.theme].textColor]" :profileName="route.params.name.toString()"  :posts="posts.posts"/>
 
 
       <Flex :column="true" justify="center" items="center" v-else class="text-center text-lg font-semibold py-6 rounded-md" :class="[themes[store.theme].signBgColor,themes[store.theme].textColor]">
