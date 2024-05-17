@@ -8,8 +8,9 @@ import {onMounted, ref} from "vue";
 import useConfigureStore from "../pinia/configure.ts";
 import Observer from "../components/Observer.vue";
 import {Icon} from "@iconify/vue";
+import {useRouter} from "vue-router";
 
-
+const router = useRouter();
 const auth = storeToRefs(useAuthenticationStore());
 const posts = ref<any>([])
 const followers = ref();

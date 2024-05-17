@@ -11,23 +11,21 @@ const links = ref<string []>([
    `material-symbols-light:add-photo-alternate-rounded`,
    `material-symbols:account-circle`
 ])
+const is = ref(0)
 
-const goToProfile = () => {
-  location.assign(`/profile/${auth.user.username}`)
-}
 </script>
 
 <template>
 <div v-if="auth.isAuthenticated" class="py-3 border-t-2 border-white/20">
    <Flex :row="true" justify="evenly">
-     <RouterLink to="/"
+     <RouterLink @click="is=0" :class="(is===0) ? `text-blue-400` : null" to="/"
      >
-       <Icon :icon="links[0]" class="max-sm:size-8 size-10"/>
+       <Icon :icon="links[0]"  class="max-sm:size-8 size-10"/>
      </RouterLink>
-       <UploadPhotoMobile :icon="links[1]"/>
-     <button type="button" @click="goToProfile()">
+       <UploadPhotoMobile @click="is=1" :class="(is===1) ? `text-blue-400` : null" :icon="links[1]"/>
+     <RouterLink :to="`/profile/${auth.user.username}`" type="button" :class="(is===2) ? `text-blue-400` : null" @click="is=2">
        <Icon :icon="links[2]" class="max-sm:size-8 size-10"/>
-     </button>
+     </RouterLink>
    </Flex>
 </div>
 </template>

@@ -7,7 +7,7 @@ const linkList = ref([{href:`https://www.linkedin.com/in/konstantinos-stylianou-
 
 <template>
     <Grid columns="4" class="justify-items-center grid-flow-row gap-x-1">
-      <a v-for="(link,index) in linkList" :key="index" class="block p-1 bg-neutral-800/30 rounded-xl hover:scale-110 transition-all duration-500 ease-in" :href="link.href" target="_blank">
+      <a v-for="(link,index) in linkList" :key="index" class="block p-1 bg-neutral-800/30 rounded-xl hover:scale-110 hover:text-blue-400 transition-all duration-500 ease-in" :href="link.href" target="_blank">
         <Icon class="size-6"  :icon="link.icon"/>
       </a>
     </Grid>
