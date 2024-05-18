@@ -6,20 +6,17 @@ import {Dialog, DialogPanel, DialogTitle, TransitionRoot, TransitionChild} from 
 import {computed, ref} from "vue";
 import {useAuthenticationStore} from "../../pinia/authentication.ts";
 import {useRoute, useRouter} from "vue-router";
-import {usePostsStore} from "../../pinia/posts.ts";
 
 defineProps<{
   photoProfile: string
 }>()
 
 const {themes,transition} = useConfigureStore();
-const posts = usePostsStore()
 const route = useRoute()
 const router = useRouter()
 const store = useConfigureStore();
 const auth = useAuthenticationStore();
 const isOpen = ref(false);
-const caption = ref<string>("");
 const file = ref<any>(null);
 const loading = ref(false);
 
@@ -31,14 +28,16 @@ const openModal = () => {
 };
 
 const tryImg = ref();
+const url = ref(import.meta.env.VITE_POST_URL)
 
 const handleUpload = async () => {
     loading.value = true;
     if (file.value) {
-      const {data} = await supabase.storage.from('images').upload(`public/` + (Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)).toString(),file.value);
+      await supabase.storage.from('images').remove([`userphoto/` + auth.user.id.toString()])
+      const {data} = await supabase.storage.from('images').upload(`userphoto/` + auth.user.id.toString(), file.value);
       if (data) {
-          await supabase.from('posts').insert({url: data.path, caption: caption.value ,userid: auth.user.id});
-          await posts.loadPosts(auth.user.id);
+          await supabase.from('users').update({photoProfile: url.value + `userphoto/${auth.user.id.toString()}`}).eq("id", auth.user.id);
+          location.reload();
       }else{
         router.push(`/404`)
       }
@@ -66,10 +65,11 @@ const isNotUserProfile = computed(() => {
 </script>
 
 <template>
-  <button
-          @click="openModal"
+  <button @click="openModal"
           :disabled="isNotUserProfile || !auth.isAuthenticated"
-          type="button"> <img :src="photoProfile" alt="pfp" :class="[transition, (isUserProfile) ? `hover:shadow-full hover:brightness-200` : null]" class="max-sm:size-16 size-28 rounded-full duration-1000"></button>
+          type="button"> <img :src="(photoProfile.length) ? photoProfile : `https://api.iconify.design/ic:baseline-account-circle.svg?color=%${(store.theme===0) ? `23FFFFFF` : `23000000`}`"
+                              alt="Photo Profile"
+                              :class="[transition, (isUserProfile) ? `hover:shadow-full hover:brightness-200` : null]" class="max-sm:size-20 size-28 rounded-full duration-1000"></button>
 
   <TransitionRoot appear :show="isOpen" as="template">
     <Dialog as="div" @close="[closeModal(), tryImg=null]" class="relative z-10">
@@ -111,10 +111,6 @@ const isNotUserProfile = computed(() => {
               <div class="flex flex-col mt-3 items-center justify-between gap-y-2">
                 <input type="file" accept=".png,.jpeg,.jpg" class="block rounded self-start" @change="handleEvent" />
                 <img v-if="tryImg" :src="tryImg" alt="idk"  class="rounded-lg w-full"/>
-                <input v-model.trim="caption"
-                       :class="transition"
-                       class="pl-3 block w-full mt-3 bg-neutral-200 text-black text-sm border rounded border-neutral-800/50 h-9  outline-0 duration-300"
-                       placeholder="Caption" type="text" maxlength="50"/>
               </div>
 
               <div class="mt-5">

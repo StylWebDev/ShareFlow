@@ -18,7 +18,7 @@ const url = ref(import.meta.env.VITE_POST_URL)
 const likes = ref<any>()
 
 const props = defineProps<{
-  profileIcon: string;
+  photoProfile: string;
   profileName: string,
   description: string,
   userid: number,
@@ -72,7 +72,7 @@ window.addEventListener('beforeunload', () => {
       :class="themes[store.theme].contentBgColor">
   <div :class="themes[store.theme].profileBgColor" class=" w-full py-2 px-3 rounded-t-md ">
     <button type="button" @click="goToProfile()" class="font-semibold text-lg capitalize outline-0">
-      <img :src="profileIcon" alt="pfp" class="inline size-10 rounded-full" />
+      <img :src="(photoProfile===``) ? photoProfile : `https://api.iconify.design/ic:baseline-account-circle.svg?color=%${(store.theme===0) ? `23FFFFFF` : `23000000`}`" alt="pfp" class="inline size-10 rounded-full" />
       {{ profileName }}
     </button>
   </div>
@@ -83,7 +83,7 @@ window.addEventListener('beforeunload', () => {
   <div :class="themes[store.theme].descriptionBgColor" class=" py-2 px-3 w-full rounded-b-md">
     <div class=" rounded-t-md">
       <p class="font-semibold text-lg">
-        <img :src="profileIcon" alt="pfp" class="inline size-6 rounded-full" />
+        <img :src="(photoProfile===``) ? photoProfile : `https://api.iconify.design/ic:baseline-account-circle.svg?color=%${(store.theme===0) ? `23FFFFFF` : `23000000`}`" alt="pfp" class="inline size-6 rounded-full" />
          {{likes}} Likes
       </p>
     </div>

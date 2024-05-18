@@ -60,7 +60,7 @@ const handleEvent = (e:any):void => {
   <button
          :class="transition"
           @click="openModal"
-          type="button"><Icon class="inline size-8" :icon="icon"/></button>
+          type="button"><Icon class="inline size-8 text-emerald-500" :icon="icon"/></button>
 
   <TransitionRoot appear :show="isOpen" as="template">
     <Dialog as="div" @close="closeModal" class="relative z-10">

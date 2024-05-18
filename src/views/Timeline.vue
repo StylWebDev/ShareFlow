@@ -38,7 +38,7 @@ const getFollowers = async ():Promise<void> => {
 
       const {data: userNames} = await supabase
           .from("users")
-          .select(`id, username`)
+          .select(`id, username, photoProfile`)
           .in("id", followingId.value);
 
       posts.value = data;
@@ -75,7 +75,7 @@ onMounted(() => {
               v-for="(post,index) in posts" :key="index+1"
             class="capitalize"
             :profileName="followers.find(follower => follower.id === post.userid).username"
-            profileIcon="https://cdn.hero.page/pfp/03dffda4-6d0d-4f4a-93c7-16e87406605f-shadowy-anime-character-unique-black-pfp-anime-1.png"
+            :profileIcon="followers.find(follower => follower.id === post.userid).photoProfile"
             :userid="auth.user.value.id"
             :description="post.caption"
             :imageSrc="post.url"   />
@@ -91,6 +91,7 @@ onMounted(() => {
           </div>
         </Transition>
       </Flex>
+
 </template>
 
 <style scoped>
