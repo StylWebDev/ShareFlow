@@ -3,18 +3,18 @@ import useConfigureStore from "../../pinia/configure.ts";
 import {Icon} from "@iconify/vue";
 import supabase from "../../supabase.ts";
 import {Dialog, DialogPanel, DialogTitle, TransitionRoot, TransitionChild} from "@headlessui/vue";
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import {useAuthenticationStore} from "../../pinia/authentication.ts";
-import {useRouter} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import {usePostsStore} from "../../pinia/posts.ts";
 
 defineProps<{
-  icon: string
+  photoProfile: string
 }>()
-
 
 const {themes,transition} = useConfigureStore();
 const posts = usePostsStore()
+const route = useRoute()
 const router = useRouter()
 const store = useConfigureStore();
 const auth = useAuthenticationStore();
@@ -22,14 +22,15 @@ const isOpen = ref(false);
 const caption = ref<string>("");
 const file = ref<any>(null);
 const loading = ref(false);
-const tryImg = ref();
 
 const closeModal = () => {
   isOpen.value = false
 }
 const openModal = () => {
   isOpen.value = true
-}
+};
+
+const tryImg = ref();
 
 const handleUpload = async () => {
     loading.value = true;
@@ -54,16 +55,24 @@ const handleEvent = (e:any):void => {
   }
 }
 
+const isUserProfile = computed(() => {
+  return auth.isAuthenticated && auth.user.username===route.params.name.toString()
+})
+
+const isNotUserProfile = computed(() => {
+  return auth.isAuthenticated && auth.user.username!==route.params.name.toString()
+})
+
 </script>
 
 <template>
   <button
-         :class="transition"
           @click="openModal"
-          type="button"><Icon class="inline size-8" :icon="icon"/></button>
+          :disabled="isNotUserProfile || !auth.isAuthenticated"
+          type="button"> <img :src="photoProfile" alt="pfp" :class="[transition, (isUserProfile) ? `hover:shadow-full hover:brightness-200` : null]" class="max-sm:size-16 size-28 rounded-full duration-1000"></button>
 
   <TransitionRoot appear :show="isOpen" as="template">
-    <Dialog as="div" @close="closeModal" class="relative z-10">
+    <Dialog as="div" @close="[closeModal(), tryImg=null]" class="relative z-10">
       <TransitionChild
           as="template"
           enter="duration-300 ease-out"
@@ -90,7 +99,7 @@ const handleEvent = (e:any):void => {
               leave-to="opacity-0 scale-95"
           >
             <DialogPanel
-                :class="themes[store.theme].contentBgColor, themes[store.theme].textColor"
+                :class="[themes[store.theme].contentBgColor, themes[store.theme].textColor]"
                 class="w-full max-w-md transform overflow-hidden rounded-2xl p-6 text-left align-middle shadow-xl transition-all"
             >
               <DialogTitle
@@ -99,8 +108,8 @@ const handleEvent = (e:any):void => {
               >
                 Upload Photo
               </DialogTitle>
-              <div class="flex flex-col mt-3 justify-between gap-y-2">
-                <input type="file" accept=".png,.jpeg,.jpg" class="block rounded" @change="handleEvent" />
+              <div class="flex flex-col mt-3 items-center justify-between gap-y-2">
+                <input type="file" accept=".png,.jpeg,.jpg" class="block rounded self-start" @change="handleEvent" />
                 <img v-if="tryImg" :src="tryImg" alt="idk"  class="rounded-lg w-full"/>
                 <input v-model.trim="caption"
                        :class="transition"

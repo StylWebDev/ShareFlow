@@ -7,6 +7,7 @@ import useConfigureStore from "../../pinia/configure.ts";
 import {useFollowStore} from "../../pinia/follow.ts";
 import {onMounted} from "vue";
 import {useRoute} from "vue-router";
+import UploadPhotoProfile from "./UploadPhotoProfile.vue";
 
 const {transition} = useConfigureStore()
 const auth = useAuthenticationStore();
@@ -38,7 +39,7 @@ onMounted(()=> {
 
     <Flex justify="center" items="center" gap-y="3" gap-x="5" class="max-sm:flex-col sm:flex-row border">
       <Flex :column="true"  class="items-center gap-x-2" >
-        <img :src="profileInfo.icon" alt="pfp" class="max-sm:size-16 size-28 rounded-full">
+        <UploadPhotoProfile :photo-profile="profileInfo.icon"/>
         <h1 class="text-2xl max-[340px]:text-lg sm:hidden font-extrabold text-yellow-500">{{profileName}}</h1>
       </Flex>
       <Flex :column="true" gap-y="1" class="sm:pt-3" items="center">
@@ -70,7 +71,6 @@ onMounted(()=> {
                 type="button">Sign Out</button>
       </Flex>
     </Flex>
-
 </template>
 
 <style scoped>

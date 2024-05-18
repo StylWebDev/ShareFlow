@@ -23,7 +23,9 @@ const closeModal = () => {
 }
 const openModal = () => {
   isOpen.value = true
-}
+};
+
+const tryImg = ref();
 
 const handleUpload = async () => {
     loading.value = true;
@@ -44,6 +46,7 @@ const handleUpload = async () => {
 const handleEvent = (e:any):void => {
   if (e.target.files[0]) {
     file.value = e.target.files[0];
+    tryImg.value = URL.createObjectURL(e.target.files[0]);
   }
 }
 
@@ -56,7 +59,7 @@ const handleEvent = (e:any):void => {
           type="button"><Icon class="inline size-8" icon="material-symbols:add-circle"/> New Post</button>
 
   <TransitionRoot appear :show="isOpen" as="template">
-    <Dialog as="div" @close="closeModal" class="relative z-10">
+    <Dialog as="div" @close="[closeModal(), tryImg=null]" class="relative z-10">
       <TransitionChild
           as="template"
           enter="duration-300 ease-out"
@@ -92,8 +95,9 @@ const handleEvent = (e:any):void => {
               >
                 Upload Photo
               </DialogTitle>
-              <div class="flex flex-col mt-3 justify-between gap-y-2">
-                <input type="file" accept=".png,.jpeg,.jpg" class="block rounded" @change="handleEvent" />
+              <div class="flex flex-col mt-3 items-center justify-between gap-y-2">
+                <input type="file" accept=".png,.jpeg,.jpg" class="block rounded self-start" @change="handleEvent" />
+                <img v-if="tryImg" :src="tryImg" alt="idk"  class="rounded-lg w-full"/>
                 <input v-model.trim="caption"
                        :class="transition"
                        class="pl-3 block w-full mt-3 bg-neutral-200 text-black text-sm border rounded border-neutral-800/50 h-9  outline-0 duration-300"

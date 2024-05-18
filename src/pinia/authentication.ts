@@ -1,12 +1,13 @@
 import {defineStore} from "pinia";
 import {ref, watch} from "vue";
 import supabase from "../supabase.ts";
-import {useRouter} from "vue-router";
+import {useRouter,useRoute} from "vue-router";
 import {usePostsStore} from "./posts.ts";
 
 
 export const useAuthenticationStore = defineStore('authentication', () => {
     const router = useRouter();
+    const route = useRoute();
     const isAuthenticated = ref<boolean>(false);
     const user = ref<any>(null);
     const externalUser = ref<any>(null);
@@ -20,6 +21,10 @@ export const useAuthenticationStore = defineStore('authentication', () => {
 
     watch(err, (newVal) => {
         if (newVal.length != 0) loading.value = false;
+    })
+
+    watch(isAuthenticated, (newVal) => {
+        if (newVal && route.name===`Login`) router.push(`/`)
     })
 
     const validatePass = (pass:string):any => {
@@ -79,14 +84,15 @@ export const useAuthenticationStore = defineStore('authentication', () => {
             if (userInfo.user) {
                 const {data} = await supabase
                     .from("users")
-                    .select("id, email, username")
+                    .select("id, email, username , photoProfile")
                     .eq('email', userInfo.user.email)
                     .single();
 
                 user.value = {
                     id: data?.id,
                     username: data?.username,
-                    email: data?.email
+                    email: data?.email,
+                    photoProfile: data?.photoProfile
                 }
                 loading.value = false;
                 isAuthenticated.value = true;
@@ -130,14 +136,15 @@ export const useAuthenticationStore = defineStore('authentication', () => {
 
             const {data} = await supabase
                 .from("users")
-                .select(`id, email, username`)
+                .select(`id, email, username, photoProfile`)
                 .eq('email', email)
                 .single();
 
             user.value = {
                 id: data?.id,
                 username: data?.username,
-                email: data?.email
+                email: data?.email,
+                photoProfile: data?.photoProfile
             }
 
             await handleSignIn({email, password});
@@ -162,14 +169,15 @@ export const useAuthenticationStore = defineStore('authentication', () => {
         else {
             const {data} = await supabase
                 .from("users")
-                .select(`id, email, username`)
+                .select(`id, email, username, photoProfile`)
                 .eq('email', loggedUser.data.user.email)
                 .single();
 
             user.value = {
                 id: data?.id,
                 username: data?.username,
-                email: data?.email
+                email: data?.email,
+                photoProfile: data?.photoProfile
             }
             isAuthenticated.value = !isAuthenticated.value
             starting.value = false;
@@ -181,7 +189,7 @@ export const useAuthenticationStore = defineStore('authentication', () => {
         err.value = ""
         const {data, error} = await supabase
             .from("users")
-            .select("id, email, username")
+            .select("id, email, username, photoProfile")
             .eq('username', username)
             .single();
         if (!error)
@@ -189,7 +197,8 @@ export const useAuthenticationStore = defineStore('authentication', () => {
             externalUser.value = {
                 id: data?.id,
                 username: data?.username,
-                email: data?.email
+                email: data?.email,
+                photoProfile: data?.photoProfile
             };
             (isAuthenticated.value && user.value.username === username)
                 ? posts.loadPosts(user.value.id)
