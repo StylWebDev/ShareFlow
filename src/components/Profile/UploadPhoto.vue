@@ -53,10 +53,12 @@ const handleEvent = (e:any):void => {
 </script>
 
 <template>
-  <button class="p-0.5  bg-blue-500 hover:bg-emerald-500 text-white rounded-full font-semibold duration-300 align-middle w-40 max-xl:hidden"
+  <button class=" hover:text-emerald-500 text-blue-500 duration-300 align-middle text-center  max-xl:hidden"
           :class="transition"
           @click="openModal"
-          type="button"><Icon class="inline size-8" icon="material-symbols:add-circle"/> New Post</button>
+          type="button"><Icon class="inline size-8" icon="material-symbols:add-circle"/>
+  <span class="block">Add Post</span>
+  </button>
 
   <TransitionRoot appear :show="isOpen" as="template">
     <Dialog as="div" @close="[closeModal(), tryImg=null]" class="relative z-10">
@@ -86,14 +88,14 @@ const handleEvent = (e:any):void => {
               leave-to="opacity-0 scale-95"
           >
             <DialogPanel
-                :class="themes[store.theme].contentBgColor, themes[store.theme].textColor"
+                :class="[themes[store.theme].contentBgColor, themes[store.theme].textColor]"
                 class="w-full max-w-md transform overflow-hidden rounded-2xl p-6 text-left align-middle shadow-xl transition-all"
             >
               <DialogTitle
                   as="h3"
                   class="text-center text-lg font-medium leading-6 border-b border-white/30 "
               >
-                Upload Photo
+                Add a post
               </DialogTitle>
               <div class="flex flex-col mt-3 items-center justify-between gap-y-2">
                 <input type="file" accept=".png,.jpeg,.jpg" class="block rounded self-start" @change="handleEvent" />
@@ -114,13 +116,13 @@ const handleEvent = (e:any):void => {
                   <button
                       type="button"
                       :class="transition"
-                      class="inline-flex justify-center rounded-md border border-transparent bg-emerald-500 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-emerald-400 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      class="inline-flex justify-center rounded-md border border-transparent bg-emerald-500 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-emerald-400 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 duration-500"
                       @click="handleUpload"
                   >Upload</button>
                   <button
                       type="button"
                       :class="transition"
-                      class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-red-500 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-red-500 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 duration-500"
                       @click="closeModal"
                   >
                     Cancel

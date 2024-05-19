@@ -12,7 +12,7 @@ const auth = useAuthenticationStore()
 
 
 onMounted(  ()=> {
-  (!darkMode.value.matches) ? store.theme=0 : store.theme=1;
+  (darkMode.value.matches) ? store.theme=0 : store.theme=1;
   document.body.style.background = themes[store.theme].bgColor;
   auth.getUser();
 })

@@ -17,6 +17,7 @@ export const useAuthenticationStore = defineStore('authentication', () => {
     const posts = usePostsStore();
     const isProfile = ref(false);
     const confirmEmail = ref(false);
+    const deleteModal = ref(false);
 
 
 
@@ -90,15 +91,21 @@ export const useAuthenticationStore = defineStore('authentication', () => {
                     .eq('email', userInfo.user.email)
                     .single();
 
-                user.value = {
-                    id: data?.id,
-                    username: data?.username,
-                    email: data?.email,
-                    photoProfile: data?.photoProfile
+                if (data) {
+                    user.value = {
+                        id: data?.id,
+                        username: data?.username,
+                        email: data?.email,
+                        photoProfile: data?.photoProfile
+                    }
+                        isAuthenticated.value = true;
+                        if(isAuthenticated) router.push("/");
+                }else {
+                    err.value = `Check Your credentials and try again`
+                    await handleLogout();
                 }
+
                 loading.value = false;
-                isAuthenticated.value = true;
-                if(isAuthenticated) router.push("/");
             }
         }
     }
@@ -161,6 +168,12 @@ export const useAuthenticationStore = defineStore('authentication', () => {
         router.push(`/login`)
     }
 
+    const deleteUser = async () => {
+        await supabase.from("users").delete().eq(`id`, user.value.id)
+        await handleLogout();
+        err.value = "";
+    }
+
     const getUser = async () => {
         starting.value = true;
         err.value = "user not found"
@@ -211,6 +224,6 @@ export const useAuthenticationStore = defineStore('authentication', () => {
 
     }
 
-    return {isAuthenticated,isProfile,starting,confirmEmail,loading,user,externalUser,err,handleSignIn,handleSignUp,handleLogout,getUser,getExternalUser};
+    return {isAuthenticated,isProfile,starting,confirmEmail,loading,deleteModal,user,externalUser,err,deleteUser,handleSignIn,handleSignUp,handleLogout,getUser,getExternalUser};
 
 })

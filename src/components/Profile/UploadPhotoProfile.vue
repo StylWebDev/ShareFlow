@@ -69,7 +69,7 @@ const isNotUserProfile = computed(() => {
           :disabled="isNotUserProfile || !auth.isAuthenticated"
           type="button"> <img :src="(photoProfile.length) ? photoProfile : `https://api.iconify.design/ic:baseline-account-circle.svg?color=%${(store.theme===0) ? `23FFFFFF` : `23000000`}`"
                               alt="Photo Profile"
-                              :class="[transition, (isUserProfile) ? `hover:shadow-full hover:brightness-200` : null]" class="max-sm:size-20 size-28 rounded-full duration-1000"></button>
+                              :class="[transition, (isUserProfile) ? `hover:shadow-full hover:brightness-150` : null]" class="max-sm:size-24 size-28 rounded-full duration-1000"></button>
 
   <TransitionRoot appear :show="isOpen" as="template">
     <Dialog as="div" @close="[closeModal(), tryImg=null]" class="relative z-10">

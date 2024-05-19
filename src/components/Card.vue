@@ -6,6 +6,7 @@ import useConfigureStore from "../pinia/configure.ts";
 import {usePostsStore} from "../pinia/posts.ts";
 import supabase from "../supabase.ts";
 import {useAuthenticationStore} from "../pinia/authentication.ts";
+import emailjs from '@emailjs/browser';
 
 const auth = useAuthenticationStore()
 const {transition,themes} = useConfigureStore()
@@ -53,6 +54,10 @@ const copyOnClipboard = () => {
   alert("Copied to clipboard");
 }
 
+const reportContent = (imgReported) => {
+  alert("Thank You For Reporting, We Will Take A Look At This Post!");
+}
+
 onUnmounted( () => {
   if (liked.value && !wasLiked.value) post.likePost(props.userid,props.imageSrc);
   else if (!liked.value && wasLiked.value) post.removeLike(props.userid,props.imageSrc);
@@ -62,6 +67,7 @@ window.addEventListener('beforeunload', () => {
   if (liked.value && !wasLiked.value) post.likePost(props.userid,props.imageSrc);
   else if (!liked.value && wasLiked.value) post.removeLike(props.userid,props.imageSrc);
 })
+
 
 </script>
 
@@ -89,8 +95,11 @@ window.addEventListener('beforeunload', () => {
     </div>
     <Flex :row="true" gap-x="2" class="pt-1.5">
       <Icon class="size-8 " :class="[(liked && auth.isAuthenticated) ? `text-red-500 scale-125 duration-300` : `duration-300 hover:scale-110 scale-100`, transition]" icon="material-symbols-light:favorite-rounded" @click="[(!liked && auth.isAuthenticated)  ? liked=true : liked=false, (liked && auth.isAuthenticated) ? likes++ : likes--]"/>
-      <button type="button" @click="copyOnClipboard">
+      <button type="button" @click="copyOnClipboard" title="Share">
         <Icon class="size-8 hover:scale-110 duration-500" :class="transition" icon="carbon:send-alt-filled"/>
+      </button>
+      <button type="button" @click="reportContent(imageSrc)" title="Report">
+        <Icon class="size-8 hover:scale-110 hover:text-red-300 duration-500" :class="transition" icon="material-symbols:report"/>
       </button>
     </Flex>
      <h1 class="text-base font-semibold text-yellow-400">{{ profileName }} </h1>

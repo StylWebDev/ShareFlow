@@ -1,7 +1,14 @@
 {
-  "name": "mystylpholio",
+  "name": "shareflow",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.1",
+  "author": "Stylianou Konsatninos",
+  "description": "ShareFlow is an web platform which allows users to share photos and videos with friends and also discovering content",
+  "keywords": [
+    "Share",
+    "Follow",
+    "Post"
+  ],
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,6 +16,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.3.3",
     "@headlessui/vue": "^1.7.22",
     "@supabase/supabase-js": "^2.43.1",
     "pinia": "^2.1.7",

@@ -37,7 +37,7 @@ const closeModal = () => {
     <Flex :column="true" justify="center" items="center" gap-y="3" class="py-3">
       <Grid columns="1" md-columns="2" sm-columns="2" lg-columns="3" xl-columns="4" txl-columns="4" class="min-[2000px]:grid-cols-5 grid-flow-row gap-y-4 gap-x-16 justify-items-center" :class="(!auth.isAuthenticated) ? `blur pointer-events-none`: null">
         <div v-for="(post,index) in posts" :key="index+1">
-          <img @click="[isOpen=true,caption=post.caption,image=post.url]" class="rounded-md cursor-pointer size-[200px] 2xl:size-[250px] object-fill" :src="url + post.url" :alt="`img_${index+1}_of_${profileName}`">
+          <img @click="[isOpen=true,caption=post.caption,image=post.url]" class="rounded-md cursor-pointer max-[400px]:size-full  max-[500px]:size-[250px] max-[650px]:size-[300px] size-[200px] 2xl:size-[250px] object-fill" :src="url + post.url" :alt="`img_${index+1}_of_${profileName}`">
         </div>
       </Grid>
     </Flex>
