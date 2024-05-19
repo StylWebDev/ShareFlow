@@ -2,7 +2,7 @@
 
     import Flex from "../components/Flex.vue";
     import Title from "../components/Header/Title.vue";
-    import {onUnmounted, reactive, ref} from "vue";
+    import {onMounted, reactive, ref} from "vue";
     import useConfigureStore from "../pinia/configure.ts";
     import {Icon} from "@iconify/vue";
     import {useAuthenticationStore} from "../pinia/authentication.ts";
@@ -23,13 +23,16 @@
       auth.handleSignUp(credentials);
     }
 
-    onUnmounted(() => {
+    onMounted(() => {
       auth.err = "";
     })
 </script>
 
 <template>
-    <Flex :column="true" items="center" class="mt-6 sm:gap-y-6">
+  <Transition enter-from-class="scale-0 opacity-0 " enter-active-class="transition-all duration-500 ease-in"
+              leave-to-class="scale-0 opacity-0 absolute w-full" leave-active-class="transition-all duration-500 ease-in "
+              appear appear-active-class="transition-all opacity-0 duration-500 ease-in">
+    <Flex v-if="!auth.confirmEmail" :column="true" items="center" class="mt-6 sm:gap-y-6">
 
       <Flex :column="true" justify="center" items="center" gap-y="5"
             :class="themes[store.theme].signBgColor"
@@ -94,6 +97,26 @@
         </h2>
       </Flex>
     </Flex>
+
+    <Flex v-else :column="true" items="center" class="mt-6 sm:gap-y-6">
+      <Flex :column="true" justify="center" items="center" gap-y="2"
+            :class="themes[store.theme].signBgColor"
+            class="py-8  max-sm:w-[90%] sm:w-[60%] lg:w-[40%] xl:w-[35%] 2xl:w-[30%] min-[2800px]:w-[20%] max-sm:rounded-t-md sm:rounded-md">
+        <div class="border-2 border-blue-500 rounded-full text-blue-500 ">
+          <Icon icon="ic:round-mark-email-unread" class="size-12 m-2"/>
+        </div>
+        <p :class="themes[store.theme].textShadow" class="font-semibold text-xl text-center px-6 capitalize">Verify your email address</p>
+        <hr width="70%">
+        <p class="text-center px-5 lg:px-14">Check Your e-mails in order to verify your account, then
+          <RouterLink to="/login" class="font-semibold text-blue-500 hover:brightness-200 duration-500" :class="transition">Sign in</RouterLink>
+          to your account</p>
+        <hr width="20%" class="mt-10">
+        <p class="italic text-xs text-center px-6 opacity-60">If you did not sign up for this account, you can ignore this email and the account will be deleted</p>
+      </Flex>
+
+    </Flex>
+  </Transition>
+
 </template>
 
 

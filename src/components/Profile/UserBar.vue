@@ -36,7 +36,6 @@ onMounted(()=> {
 </script>
 
 <template>
-
     <Flex justify="center" items="center" gap-y="3" gap-x="5" class="max-sm:flex-col sm:flex-row border">
       <Flex :column="true"  class="items-center gap-x-2" >
         <UploadPhotoProfile :photo-profile="profileInfo.icon"/>
@@ -50,7 +49,6 @@ onMounted(()=> {
           <p class="text-center capitalize">{{profileInfo.following}}<br> following</p>
         </Flex>
         <Flex v-if="auth.isAuthenticated && auth.user.username !== $route.params.name" :row="true" gap-x="3" justify="evenly"  class="items-center">
-
           <button type="button" class="px-3 py-0.5  duration-300 max-sm:text-sm capitalize"
                   :class="(!follow.isFollowing) ? `bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 ` : `bg-white text-black rounded-lg font-semibold`"
                   :disabled="follow.isFollowing"

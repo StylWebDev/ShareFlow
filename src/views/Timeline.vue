@@ -8,12 +8,10 @@ import {onMounted, ref} from "vue";
 import useConfigureStore from "../pinia/configure.ts";
 import Observer from "../components/Observer.vue";
 import {Icon} from "@iconify/vue";
-import {useRouter} from "vue-router";
 
-const router = useRouter();
 const auth = storeToRefs(useAuthenticationStore());
 const posts = ref<any>([])
-const followers = ref();
+const followers = ref<any>();
 const store = useConfigureStore();
 const count = ref(2)
 const followingId = ref<any>(null)
@@ -40,6 +38,8 @@ const getFollowers = async ():Promise<void> => {
           .from("users")
           .select(`id, username, photoProfile`)
           .in("id", followingId.value);
+
+      console.log(userNames)
 
       posts.value = data;
       followers.value = userNames;
@@ -75,7 +75,7 @@ onMounted(() => {
               v-for="(post,index) in posts" :key="index+1"
             class="capitalize"
             :profileName="followers.find(follower => follower.id === post.userid).username"
-            :profileIcon="followers.find(follower => follower.id === post.userid).photoProfile"
+            :photo-profile="followers.find(follower => follower.id === post.userid).photoProfile"
             :userid="auth.user.value.id"
             :description="post.caption"
             :imageSrc="post.url"   />

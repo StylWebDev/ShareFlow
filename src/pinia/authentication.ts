@@ -16,6 +16,7 @@ export const useAuthenticationStore = defineStore('authentication', () => {
     const starting = ref<boolean>(false);
     const posts = usePostsStore();
     const isProfile = ref(false);
+    const confirmEmail = ref(false);
 
 
 
@@ -66,6 +67,7 @@ export const useAuthenticationStore = defineStore('authentication', () => {
     };
 
     const handleSignIn = async (credentials:any ) => {
+        confirmEmail.value = false
         err.value = ""
         loading.value = true;
         const {email, password} = credentials;
@@ -147,7 +149,8 @@ export const useAuthenticationStore = defineStore('authentication', () => {
                 photoProfile: data?.photoProfile
             }
 
-            await handleSignIn({email, password});
+            confirmEmail.value = true
+            loading.value = false
         }
     }
 
@@ -160,6 +163,7 @@ export const useAuthenticationStore = defineStore('authentication', () => {
 
     const getUser = async () => {
         starting.value = true;
+        err.value = "user not found"
         const loggedUser:any = await supabase.auth.getUser();
 
         if (!loggedUser.data.user) {
@@ -203,10 +207,10 @@ export const useAuthenticationStore = defineStore('authentication', () => {
             (isAuthenticated.value && user.value.username === username)
                 ? posts.loadPosts(user.value.id)
                 : posts.loadPosts(externalUser.value.id);
-        }
+        }else err.value = "user not found"
 
     }
 
-    return {isAuthenticated,isProfile,starting,loading,user,externalUser,err,handleSignIn,handleSignUp,handleLogout,getUser,getExternalUser};
+    return {isAuthenticated,isProfile,starting,confirmEmail,loading,user,externalUser,err,handleSignIn,handleSignUp,handleLogout,getUser,getExternalUser};
 
 })

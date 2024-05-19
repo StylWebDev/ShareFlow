@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import Flex from "../components/Flex.vue";
 import Title from "../components/Header/Title.vue";
-import {onUnmounted, reactive, ref} from "vue";
+import {onMounted, reactive, ref} from "vue";
 import useConfigureStore from "../pinia/configure.ts";
 import {Icon} from "@iconify/vue";
 import {useAuthenticationStore} from "../pinia/authentication.ts";
 import {SignIn} from "../types.ts";
-import {useRouter} from "vue-router";
 
 const {transition,themes} = useConfigureStore()
 const store = useConfigureStore()
@@ -23,10 +22,10 @@ const handleOk = () => {
   auth.handleSignIn(credentials);
 }
 
-onUnmounted(() => {
+onMounted(()=> {
   auth.err = "";
+  auth.confirmEmail = false
 })
-
 </script>
 
 <template>

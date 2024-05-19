@@ -31,7 +31,6 @@ onMounted(async ()=> {
       .select(`liked, *`, {count: `exact`})
       .eq("liked", props.imageSrc)
   likes.value = totalLikes
-
   const {data: userLiked} = await supabase
       .from("likes")
       .select()
@@ -70,25 +69,26 @@ window.addEventListener('beforeunload', () => {
 <Flex :column="true" justify="center" items="center"
       class="max-[250px]:w-[200px] max-[300px]:w-[250px] max-sm:w-[300px] sm:w-[350px] md:w-[450px] rounded-md"
       :class="themes[store.theme].contentBgColor">
+
   <div :class="themes[store.theme].profileBgColor" class=" w-full py-2 px-3 rounded-t-md ">
     <button type="button" @click="goToProfile()" class="font-semibold text-lg capitalize outline-0">
-      <img :src="(photoProfile===``) ? photoProfile : `https://api.iconify.design/ic:baseline-account-circle.svg?color=%${(store.theme===0) ? `23FFFFFF` : `23000000`}`" alt="pfp" class="inline size-10 rounded-full" />
+      <img :src="(photoProfile!==``) ? photoProfile : `https://api.iconify.design/ic:baseline-account-circle.svg?color=%${(store.theme===0) ? `23FFFFFF` : `23000000`}`" alt="pfp" class="inline size-10 rounded-full" />
       {{ profileName }}
     </button>
   </div>
   <div class="text-center relative w-[100%] rounded-md">
-    <img @dblclick="[(liked && auth.isAuthenticated) ? liked=!liked : null, (!liked && auth.isAuthenticated) ? likes-- : likes++]" :src="url + imageSrc" alt="img" class="inline cursor-pointer">
+    <img @dblclick="[(!liked && auth.isAuthenticated)  ? liked=true : liked=false, (liked && auth.isAuthenticated) ? likes++ : likes--]" :src="url + imageSrc" alt="img" class="inline cursor-pointer">
   </div>
 
   <div :class="themes[store.theme].descriptionBgColor" class=" py-2 px-3 w-full rounded-b-md">
     <div class=" rounded-t-md">
       <p class="font-semibold text-lg">
-        <img :src="(photoProfile===``) ? photoProfile : `https://api.iconify.design/ic:baseline-account-circle.svg?color=%${(store.theme===0) ? `23FFFFFF` : `23000000`}`" alt="pfp" class="inline size-6 rounded-full" />
+        <img :src="(photoProfile!==``) ? photoProfile : `https://api.iconify.design/ic:baseline-account-circle.svg?color=%${(store.theme===0) ? `23FFFFFF` : `23000000`}`" alt="pfp" class="inline size-6 rounded-full" />
          {{likes}} Likes
       </p>
     </div>
     <Flex :row="true" gap-x="2" class="pt-1.5">
-      <Icon class="size-8 " :class="[(liked && auth.isAuthenticated) ? `text-red-500 scale-125 duration-300` : `text-neutral-100 duration-300 hover:scale-110 scale-100`, transition]" icon="material-symbols-light:favorite-rounded" @click="[(liked && auth.isAuthenticated) ? liked=!liked : null, (!liked && auth.isAuthenticated) ? likes-- : likes++]"/>
+      <Icon class="size-8 " :class="[(liked && auth.isAuthenticated) ? `text-red-500 scale-125 duration-300` : `duration-300 hover:scale-110 scale-100`, transition]" icon="material-symbols-light:favorite-rounded" @click="[(!liked && auth.isAuthenticated)  ? liked=true : liked=false, (liked && auth.isAuthenticated) ? likes++ : likes--]"/>
       <button type="button" @click="copyOnClipboard">
         <Icon class="size-8 hover:scale-110 duration-500" :class="transition" icon="carbon:send-alt-filled"/>
       </button>
