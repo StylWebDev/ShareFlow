@@ -56,6 +56,7 @@ const handleEvent = (e:any):void => {
   <button class=" hover:text-emerald-500 text-blue-500 duration-300 align-middle text-center  max-xl:hidden"
           :class="transition"
           @click="openModal"
+          title="Add Post"
           type="button"><Icon class="inline size-8" icon="material-symbols:add-circle"/>
   <span class="block">Add Post</span>
   </button>

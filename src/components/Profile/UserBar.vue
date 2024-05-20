@@ -81,7 +81,7 @@ onMounted(()=> {
         </Flex>
 
         <button v-if="auth.isAuthenticated && auth.user.username === $route.params.name"
-                class="w-44 mt-1 font-semibold rounded-lg text-red-500 border-2 border-red-500 hover:text-white hover:border-red-500 hover:bg-red-500 duration-500 xl:hidden"
+                class="w-44  mt-1 font-semibold rounded-lg text-red-500 border-2 border-red-500 hover:text-white hover:border-red-500 hover:bg-red-500 duration-500 xl:hidden"
                 :class="transition"
                 @click="auth.handleLogout()"
                 type="button">Sign Out</button>

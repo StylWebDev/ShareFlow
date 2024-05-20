@@ -34,18 +34,26 @@ onUpdated(()=> {
     >
       <Flex v-if="auth.isAuthenticated && auth.user.username === route.params.name" :column="true"
             class="gap-y-5   max-sm:w-[90%] sm:w-[80%] lg:w-[80%] xl:w-[80%] 2xl:w-[70%] ">
-        <UserBar class="px-16 py-3 rounded-md capitalize" :class="[themes[store.theme].signBgColor ,themes[store.theme].textColor]"
+        <UserBar class="px-16 py-3 rounded-md capitalize"
+                 :class="[themes[store.theme].signBgColor ,themes[store.theme].textColor]"
                  :profileName="auth.user.username"
                  :posts="posts"
                  :profileInfo="{icon: auth.user.photoProfile ,posts: posts.posts.length, followers: follow.followers, following: follow.following}"/>
-        <ImageGallery class="px-16 py-3 rounded-md border" :class="themes[store.theme].signBgColor" :photoProfile="auth.user.photoProfile"  :profileName="route.params.name.toString()" :posts="posts.posts"/>
+        <ImageGallery class="px-4 py-3 rounded-md border" :class="themes[store.theme].signBgColor" :photoProfile="auth.user.photoProfile"  :profileName="route.params.name.toString()" :posts="posts.posts"/>
       </Flex>
 
       <Flex v-else-if="auth.externalUser" :column="true"
             class="gap-y-5   max-sm:w-[90%] sm:w-[80%] lg:w-[80%] xl:w-[80%] 2xl:w-[70%] ">
         <UserBar class="px-16 py-3 rounded-md capitalize" :class="[themes[store.theme].signBgColor ,themes[store.theme].textColor]"
+                 v-if="auth.isAuthenticated"
                  :profileName="auth.externalUser.username"
                  :profileInfo="{icon: auth.externalUser.photoProfile ,posts: posts.posts.length, followers: follow.followers, following: follow.following}"/>
+
+        <UserBar class="px-16 py-3 rounded-md capitalize" :class="[themes[store.theme].signBgColor ,themes[store.theme].textColor]"
+                 v-else
+                 :profileName="auth.externalUser.username"
+                 :profileInfo="{icon: auth.externalUser.photoProfile ,posts: posts.posts.length, followers: follow.followers, following: follow.following}"/>
+
         <ImageGallery v-if="posts.posts.length > 0" class="px-16 py-3 rounded-md border" :class="[themes[store.theme].signBgColor ,themes[store.theme].textColor]" :profileName="route.params.name.toString()" :photoProfile="auth.externalUser.photoProfile"  :posts="posts.posts"/>
 
 

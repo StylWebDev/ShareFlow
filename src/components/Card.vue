@@ -42,7 +42,6 @@ onMounted(async ()=> {
     liked.value = true;
     wasLiked.value = true;
   }else wasLiked.value = false;
-
 })
 
 const goToProfile = () => {
@@ -51,11 +50,23 @@ const goToProfile = () => {
 
 const copyOnClipboard = () => {
   navigator.clipboard.writeText( location.hostname.toString() + `/post/${props.imageSrc}`);
-  alert("Copied to clipboard");
+  store.toastMsg = "Copied to clipboard"
+  store.showToast = true
 }
 
-const reportContent = (imgReported) => {
-  alert("Thank You For Reporting, We Will Take A Look At This Post!");
+const reportContent = (postReported:string) => {
+  emailjs
+      .send(import.meta.env.VITE_SERVICE_ID, import.meta.env.VITE_TEMPLATE_ID,
+          {name: props.profileName, post: postReported, link: url.value+postReported} ,
+          {publicKey: import.meta.env.VITE_EMAIL_KEY})
+      .then((response) => {
+            store.toastMsg = "Report Send Successfully!"
+            store.showToast = true
+      }, (error) => {
+        store.toastMsg = "An error has occurred!"
+        store.showToast = true
+          }
+      );
 }
 
 onUnmounted( () => {
@@ -83,7 +94,11 @@ window.addEventListener('beforeunload', () => {
     </button>
   </div>
   <div class="text-center relative w-[100%] rounded-md">
-    <img @dblclick="[(!liked && auth.isAuthenticated)  ? liked=true : liked=false, (liked && auth.isAuthenticated) ? likes++ : likes--]" :src="url + imageSrc" alt="img" class="inline cursor-pointer">
+    <img @dblclick="[(!liked && auth.isAuthenticated && profileName !== auth.user.username)  ? liked=true : liked=false,
+     (liked && auth.isAuthenticated && profileName !== auth.user.username) ? likes++ : likes--]"
+         :src="url + imageSrc"
+         alt="img" class="inline cursor-pointer"
+    >
   </div>
 
   <div :class="themes[store.theme].descriptionBgColor" class=" py-2 px-3 w-full rounded-b-md">
@@ -93,18 +108,25 @@ window.addEventListener('beforeunload', () => {
          {{likes}} Likes
       </p>
     </div>
+
     <Flex :row="true" gap-x="2" class="pt-1.5">
-      <Icon class="size-8 " :class="[(liked && auth.isAuthenticated) ? `text-red-500 scale-125 duration-300` : `duration-300 hover:scale-110 scale-100`, transition]" icon="material-symbols-light:favorite-rounded" @click="[(!liked && auth.isAuthenticated)  ? liked=true : liked=false, (liked && auth.isAuthenticated) ? likes++ : likes--]"/>
+      <Icon v-if="profileName !== auth.user.username"  class="size-8 cursor-pointer"
+            :class="[(liked && auth.isAuthenticated) ? `text-red-500 scale-125 duration-300` : `duration-300 hover:scale-110 scale-100`, transition]" icon="material-symbols-light:favorite-rounded"
+            @click="[(!liked && auth.isAuthenticated)  ? liked=true : liked=false,
+             (liked && auth.isAuthenticated) ? likes++ : likes--]"/>
+
       <button type="button" @click="copyOnClipboard" title="Share">
-        <Icon class="size-8 hover:scale-110 duration-500" :class="transition" icon="carbon:send-alt-filled"/>
+        <Icon class="size-8 hover:scale-110 hover:text-blue-300 duration-500" :class="transition" icon="carbon:send-alt-filled"/>
       </button>
-      <button type="button" @click="reportContent(imageSrc)" title="Report">
+
+      <button v-if="profileName !== auth.user.username" type="button" @click.once="reportContent(imageSrc)" title="Report">
         <Icon class="size-8 hover:scale-110 hover:text-red-300 duration-500" :class="transition" icon="material-symbols:report"/>
       </button>
     </Flex>
      <h1 class="text-base font-semibold text-yellow-400">{{ profileName }} </h1>
      <p class="break-all text-sm font-normal"> {{description}}</p>
   </div>
+
 </Flex>
 </template>
 

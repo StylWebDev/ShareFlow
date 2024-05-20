@@ -24,7 +24,6 @@ export const useFollowStore = defineStore("follow", () => {
             .eq('followingId', externalUserId)
             .single();
         (data) ? isFollowing.value = true : isFollowing.value = false;
-        console.log(isFollowing.value)
     }
 
 

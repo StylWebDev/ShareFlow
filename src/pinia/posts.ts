@@ -25,15 +25,16 @@ export const usePostsStore = defineStore("posts", () => {
 
 
     const loadPosts = async (userid:number):Promise<any> => {
-        posts.value = [];
+        posts.value= [];
         noPostsMsg.value = "";
         const {data: postsArr, error} = await supabase
             .from('posts')
             .select()
             .eq(`userid`, userid);
         if (!error) {
+            console.log(postsArr);
             postsArr?.forEach((post) => {
-                posts.value.unshift({id: post.id, caption: post.caption, date: post.created_at, url: post.url.toString()})
+                posts.value?.unshift({id: post.id, caption: post.caption, date: post.created_at, url: post.url.toString()})
             })
         }else noPostsMsg.value = "This User Does not Posted yet";
     }

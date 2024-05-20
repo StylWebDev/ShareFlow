@@ -50,12 +50,17 @@ const useConfigureStore = defineStore("configure", () => {
         if (search.value !== "") location.assign(`/profile/${search.value}`);
     }
 
+    const showToast = ref<boolean>(false)
+    const toastMsg = ref<string>("")
+
     return {
         transition,
         themes,
         theme,
         search,
         goToProfile,
+        showToast,
+        toastMsg
     }
 })
 
